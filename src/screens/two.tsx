@@ -1,5 +1,5 @@
-import { useStyles } from 'react-native-unistyles';
 import { Text, View } from 'react-native';
+import { useStyles } from 'react-native-unistyles';
 
 import EditScreenInfo from '../components/edit-screen-info';
 

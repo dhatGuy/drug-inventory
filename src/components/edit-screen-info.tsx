@@ -1,7 +1,6 @@
 import React from 'react';
-
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { Text, View } from 'react-native';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 export default function EditScreenInfo({ path }: { path: string }) {
   const { styles } = useStyles(stylesheet);

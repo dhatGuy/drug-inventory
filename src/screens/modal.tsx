@@ -1,7 +1,6 @@
-import { useStyles } from 'react-native-unistyles';
-import { Platform, Text, View } from 'react-native';
-
 import { StatusBar } from 'expo-status-bar';
+import { Platform, Text, View } from 'react-native';
+import { useStyles } from 'react-native-unistyles';
 
 import EditScreenInfo from '../components/edit-screen-info';
 

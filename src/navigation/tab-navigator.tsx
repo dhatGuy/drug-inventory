@@ -1,9 +1,8 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StackScreenProps } from '@react-navigation/stack';
-
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { Pressable } from 'react-native';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { RootStackParamList } from '.';
 import One from '../screens/one';
