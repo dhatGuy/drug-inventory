@@ -53,6 +53,7 @@ const stylesheet = createStyleSheet((theme) => ({
   },
   input: {
     height: "auto",
+    fontFamily: "Poppins_500Medium",
     paddingVertical: 12,
     backgroundColor: "#fff",
     paddingHorizontal: 16,

@@ -19,7 +19,9 @@ export const lightTheme = {
       fontSize: 20,
       fontWeight: "bold",
     },
-
+    text: {
+      fontFamily: "Poppins_500Medium",
+    },
     separator: {
       backgroundColor: "gray",
       height: 1,

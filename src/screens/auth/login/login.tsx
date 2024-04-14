@@ -90,14 +90,13 @@ const stylesheet = createStyleSheet({
   },
   title: {
     fontSize: 27,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#1d1d1d",
     marginBottom: 6,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 15,
-    fontWeight: "500",
     color: "#929292",
     textAlign: "center",
   },
@@ -125,7 +124,7 @@ const stylesheet = createStyleSheet({
   },
   inputLabel: {
     fontSize: 16,
-    fontWeight: "700",
+    fontFamily: "Poppins_600SemiBold",
   },
   inputControl: {
     height: 80,

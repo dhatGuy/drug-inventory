@@ -1740,6 +1740,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo-google-fonts/poppins@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@expo-google-fonts/poppins@npm:0.2.3"
+  checksum: 65f5dc450f27ec035db25eccae4bf90b6625d464bad0996f1518a4cd0f04850f65fc582c6ef5e5eb7f5c8d56bb7e975aad1a3a0b223713a41cfec7657685afd2
+  languageName: node
+  linkType: hard
+
 "@expo/bunyan@npm:^4.0.0":
   version: 4.0.0
   resolution: "@expo/bunyan@npm:4.0.0"
@@ -4737,6 +4744,7 @@ __metadata:
   resolution: "drug-inventory@workspace:."
   dependencies:
     "@babel/core": ^7.20.0
+    "@expo-google-fonts/poppins": ^0.2.3
     "@expo/vector-icons": ^14.0.0
     "@react-navigation/bottom-tabs": ^6.5.8
     "@react-navigation/native": ^6.1.7
@@ -4748,6 +4756,8 @@ __metadata:
     eslint-config-universe: ^12.0.0
     expo: ~50.0.5
     expo-dev-client: ~3.3.11
+    expo-font: ~11.10.3
+    expo-splash-screen: ~0.26.4
     expo-status-bar: ~1.11.1
     prettier: ^3.0.3
     react: 18.2.0
@@ -5554,6 +5564,17 @@ __metadata:
   dependencies:
     invariant: ^2.2.4
   checksum: 70efae62c180fde08cdccabb9a121a478c92e71e011c0f27e12c48792ac74818bebda68899feb1f65276fcc825b2dc9e8c63256abc7ece0bf92021c2c47270d5
+  languageName: node
+  linkType: hard
+
+"expo-splash-screen@npm:~0.26.4":
+  version: 0.26.4
+  resolution: "expo-splash-screen@npm:0.26.4"
+  dependencies:
+    "@expo/prebuild-config": 6.7.4
+  peerDependencies:
+    expo: "*"
+  checksum: b8bd28e00b6bbdc4d1b926dda8dde29a2c54451bb26099ac1e44dcfa07a9dcd9fad0d0b6a9ecb8b2419e7c049befcfeb75a79ce761553d30686f9962c9d9db78
   languageName: node
   linkType: hard
 

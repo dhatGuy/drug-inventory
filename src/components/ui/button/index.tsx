@@ -79,7 +79,7 @@ const stylesheet = createStyleSheet({
   },
   text: {
     fontSize: 18,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     variants: {
       bg: {
         primary: {
