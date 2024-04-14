@@ -1,11 +1,13 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import TabNavigator from './tab-navigator';
-import Modal from '../screens/modal';
+import Modal from "../screens/modal";
+import AuthStack from "./auth-stack";
+import TabNavigator from "./tab-navigator";
 
 export type RootStackParamList = {
   TabNavigator: undefined;
+  AuthStack: undefined;
   Modal: undefined;
 };
 
@@ -14,7 +16,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function RootStack() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="TabNavigator">
+      <Stack.Navigator>
+        <Stack.Screen
+          name="AuthStack"
+          options={{
+            headerShown: false,
+          }}
+          component={AuthStack}
+        />
         <Stack.Screen
           name="TabNavigator"
           component={TabNavigator}
@@ -23,7 +32,7 @@ export default function RootStack() {
         <Stack.Screen
           name="Modal"
           component={Modal}
-          options={{ presentation: 'modal', headerLeft: () => null }}
+          options={{ presentation: "modal", headerLeft: () => null }}
         />
       </Stack.Navigator>
     </NavigationContainer>

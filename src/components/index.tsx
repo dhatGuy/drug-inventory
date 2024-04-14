@@ -1,0 +1,1 @@
+export { StyledSafeAreaView } from "./styledSafeAreaView";

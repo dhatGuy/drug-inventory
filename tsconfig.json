@@ -3,6 +3,8 @@
   "compilerOptions": {
     "jsx": "preserve",
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
 
     "baseUrl": ".",
     "paths": {

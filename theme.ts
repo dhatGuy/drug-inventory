@@ -1,30 +1,31 @@
 const colors = {
-  white: '#ffffff',
-  azureRadiance: '#007AFF',
-  limedSpruce: '#38434D',
-  cornflowerBlue: '#6366F1',
-  astral: '#2E78B7',
+  white: "#ffffff",
+  azureRadiance: "#007AFF",
+  limedSpruce: "#38434D",
+  cornflowerBlue: "#6366F1",
+  astral: "#2E78B7",
+  background: "#e8ecf4",
 } as const;
 
 export const lightTheme = {
   colors,
   components: {
     container: {
-      alignItems: 'center',
+      alignItems: "center",
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     title: {
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
 
     separator: {
-      backgroundColor: 'gray',
+      backgroundColor: "gray",
       height: 1,
       marginVertical: 30,
       opacity: 0.25,
-      width: '80%',
+      width: "80%",
     },
   },
   margins: {
@@ -32,5 +33,14 @@ export const lightTheme = {
     md: 4,
     lg: 8,
     xl: 12,
+  },
+} as const;
+
+export const darkTheme = {
+  ...lightTheme,
+  colors: {
+    ...colors,
+    white: "#000000",
+    background: "#1c1c1c",
   },
 } as const;
