@@ -11,6 +11,16 @@ export type RootStackParamList = {
   Modal: undefined;
 };
 
+export type AuthStackParamList = {
+  Login: undefined;
+  Signup: undefined;
+};
+
+export type TabNavigatorParamList = {
+  Home: undefined;
+  Inventory: undefined;
+};
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
@@ -18,16 +28,16 @@ export default function RootStack() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="TabNavigator"
+          component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="AuthStack"
           options={{
             headerShown: false,
           }}
           component={AuthStack}
-        />
-        <Stack.Screen
-          name="TabNavigator"
-          component={TabNavigator}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Modal"

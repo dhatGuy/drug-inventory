@@ -21,6 +21,7 @@ export const lightTheme = {
     },
     text: {
       fontFamily: "Poppins_500Medium",
+      color: "#222",
     },
     separator: {
       backgroundColor: "gray",
@@ -40,6 +41,17 @@ export const lightTheme = {
 
 export const darkTheme = {
   ...lightTheme,
+  components: {
+    ...lightTheme.components,
+    container: {
+      ...lightTheme.components.container,
+      backgroundColor: "#1c1c1c",
+    },
+    text: {
+      ...lightTheme.components.text,
+      color: "#fff",
+    },
+  },
   colors: {
     ...colors,
     white: "#000000",

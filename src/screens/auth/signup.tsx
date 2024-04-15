@@ -124,13 +124,12 @@ const stylesheet = createStyleSheet({
   },
   title: {
     fontSize: 31,
-    fontWeight: "700",
+    fontFamily: "Poppins_700Bold",
     color: "#1D2A32",
     marginBottom: 6,
   },
   subtitle: {
     fontSize: 15,
-    fontWeight: "500",
     color: "#929292",
   },
   /** Header */
@@ -162,7 +161,7 @@ const stylesheet = createStyleSheet({
   },
   formFooter: {
     fontSize: 15,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#222",
     textAlign: "center",
     letterSpacing: 0.15,
@@ -173,7 +172,7 @@ const stylesheet = createStyleSheet({
   },
   inputLabel: {
     fontSize: 17,
-    fontWeight: "600",
+    fontFamily: "Poppins_600SemiBold",
     color: "#222",
     marginBottom: 8,
   },
