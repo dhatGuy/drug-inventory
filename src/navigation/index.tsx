@@ -18,7 +18,7 @@ export type AuthStackParamList = {
 
 export type TabNavigatorParamList = {
   Home: undefined;
-  Inventory: undefined;
+  InventoryTab: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

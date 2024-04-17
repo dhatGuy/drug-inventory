@@ -4872,6 +4872,7 @@ __metadata:
     eslint: ^8.50.0
     eslint-config-universe: ^12.0.0
     expo: ~50.0.5
+    expo-camera: ~14.1.3
     expo-dev-client: ~3.3.11
     expo-font: ~11.10.3
     expo-splash-screen: ~0.26.4
@@ -5548,6 +5549,17 @@ __metadata:
     invariant: ^2.2.4
     md5-file: ^3.2.3
   checksum: 461e335d17877d8fc54d559dea2d52d6c2a2a27c1a99a796f3181ebf92f62e227f1298c51a6ab0c619d97b127a3ffbfd3e679f8cf6907aed68a1e31fd73d5061
+  languageName: node
+  linkType: hard
+
+"expo-camera@npm:~14.1.3":
+  version: 14.1.3
+  resolution: "expo-camera@npm:14.1.3"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    expo: "*"
+  checksum: c6b99409f1631d8bf747e43dd1cc6cd84068bdb32d324f7a129f2d40016a72a4f271fea3944d13ba940204e613c095a7241715f0808e6f4545c9e37af361bc83
   languageName: node
   linkType: hard
 

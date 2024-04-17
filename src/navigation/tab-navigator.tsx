@@ -5,7 +5,7 @@ import { Pressable } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { RootStackParamList, TabNavigatorParamList } from ".";
-import Two from "../screens/two";
+import InventoryStack from "./inventory-stack";
 
 import Home from "~/screens/tab/home";
 
@@ -53,8 +53,8 @@ export default function TabLayout({ navigation }: Props) {
         }}
       />
       <Tab.Screen
-        name="Inventory"
-        component={Two}
+        name="InventoryTab"
+        component={InventoryStack}
         options={{
           title: "Inventory",
           tabBarIcon: ({ color }) => <TabBarIcon name="inventory-2" color={color} />,
