@@ -1,18 +1,16 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
+import { View } from "react-native";
 
 import { StyledSafeAreaView } from "~/components";
-import { Button, Input } from "~/components/ui";
+import { Button, Input, Text } from "~/components/ui";
+import { Label } from "~/components/ui/label";
 
 export default function Login({ navigation }) {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-
-  const { styles } = useStyles(stylesheet);
 
   return (
     <StyledSafeAreaView>
@@ -21,44 +19,46 @@ export default function Login({ navigation }) {
           <MaterialIcons color="#075eec" name="inventory-2" size={44} />
         </View>
 
-        <Text className="text-center text-[27px] font-bold">
+        <Text className="mb-1 text-center font-PoppinsBold text-[27px] text-[#1d1d1d]">
           Welcome to <Text className="text-blue-900">Emzor Inventory</Text>
         </Text>
 
-        <Text style={styles.subtitle}>Manage your drug inventory with ease and efficiency</Text>
+        <Text className="text-center text-gray-500">
+          Manage your drug inventory with ease and efficiency
+        </Text>
       </View>
 
-      <View style={styles.form}>
-        <View style={styles.input}>
-          <Text style={styles.inputLabel}>Email address</Text>
+      <View className="gap-4">
+        <View className="gap-1">
+          <Label nativeID="email">Email address</Label>
 
           <Input
+            aria-labelledby="email"
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
             onChangeText={(email) => setForm({ ...form, email })}
-            placeholder=""
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
+            placeholder="Email address"
+            className="rounded-xl"
             value={form.email}
           />
         </View>
 
-        <View style={styles.input}>
-          <Text style={styles.inputLabel}>Password</Text>
+        <View className="gap-1">
+          <Label nativeID="password">Password</Label>
 
           <Input
+            aria-labelledby="password"
             autoCorrect={false}
             onChangeText={(password) => setForm({ ...form, password })}
-            placeholder=""
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
+            placeholder="*********"
+            className="rounded-xl"
             secureTextEntry
             value={form.password}
           />
         </View>
 
-        <View style={styles.formAction}>
+        <View className="mt-6 gap-3">
           <Button
             onPress={() => {
               // handle onPress
@@ -78,43 +78,3 @@ export default function Login({ navigation }) {
     </StyledSafeAreaView>
   );
 }
-
-const stylesheet = createStyleSheet({
-  title: {
-    fontSize: 27,
-    fontFamily: "Poppins_700Bold",
-    color: "#1d1d1d",
-    marginBottom: 6,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#929292",
-    textAlign: "center",
-  },
-  /** Form */
-  form: {
-    gap: 15,
-  },
-  /** Input */
-  input: {
-    gap: 5,
-  },
-  inputLabel: {
-    fontSize: 16,
-    fontFamily: "Poppins_600SemiBold",
-  },
-  inputControl: {
-    height: 80,
-    backgroundColor: "#fff",
-    paddingLeft: 10,
-    borderRadius: 12,
-    fontWeight: "500",
-    color: "#222",
-  },
-  /** Action */
-  formAction: {
-    marginTop: 24,
-    gap: 10,
-  },
-});

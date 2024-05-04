@@ -1,11 +1,24 @@
+const nativewindPreset = require("nativewind/preset");
 const { hairlineWidth } = require("nativewind/theme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./src/**/**/*.{js,jsx,ts,tsx}", "./App.{js,jsx,ts,tsx}"],
-  presets: [require("nativewind/preset")],
+  presets: [nativewindPreset],
   theme: {
     extend: {
+      fontFamily: {
+        PoppinsThin: ["Poppins_100Thin"],
+        PoppinsExtraLight: ["Poppins_200ExtraLight"],
+        PoppinsLight: ["Poppins_300Light"],
+        PoppinsRegular: ["Poppins_400Regular"],
+        PoppinsMedium: ["Poppins_500Medium"],
+        PoppinsSemiBold: ["Poppins_600SemiBold"],
+        PoppinsBold: ["Poppins_700Bold"],
+        PoppinsExtraBold: ["Poppins_800ExtraBold"],
+        PoppinsBlack: ["Poppins_900Black"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

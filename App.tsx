@@ -1,15 +1,14 @@
-import "./unistyles";
+import "~/global.css";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
+import { verifyInstallation } from "nativewind";
 import React, { useEffect } from "react";
-import { Platform } from "react-native";
 import "react-native-gesture-handler";
 
 import ErrorBoundary from "~/components/error-boundary";
-import "~/global.css";
 import useLoadResources from "~/hooks/useLoadResources";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -39,10 +38,6 @@ export default function App() {
   React.useEffect(() => {
     (async () => {
       const theme = await AsyncStorage.getItem("theme");
-      if (Platform.OS === "web") {
-        // Adds the background color to the html element to prevent white background on overscroll.
-        document.documentElement.classList.add("bg-background");
-      }
       if (!theme) {
         AsyncStorage.setItem("theme", colorScheme);
         setIsColorSchemeLoaded(true);
@@ -61,16 +56,13 @@ export default function App() {
     });
   }, []);
 
-  if (!isColorSchemeLoaded) {
+  if (!isColorSchemeLoaded && !loaded) {
     return null;
   }
 
-  if (!loaded) {
-    return null;
-  }
-
+  verifyInstallation();
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+    <ThemeProvider value={LIGHT_THEME}>
       <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
       <ErrorBoundary>
         <RootStack />
