@@ -1,6 +1,7 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
+    "eslint:recommended",
     "universe/native",
     "universe/shared/typescript-analysis",
     "plugin:tailwindcss/recommended",

@@ -6,14 +6,18 @@ import { TextClassContext } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
 
 const buttonVariants = cva(
-  "group flex items-center justify-center rounded-md web:ring-offset-background web:transition-colors web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2",
+  `group flex items-center justify-center rounded-md web:ring-offset-background
+  web:transition-colors web:focus-visible:outline-none web:focus-visible:ring-2
+  web:focus-visible:ring-ring web:focus-visible:ring-offset-2`,
   {
     variants: {
       variant: {
         default: "bg-primary active:opacity-90 web:hover:opacity-90",
         destructive: "bg-destructive active:opacity-90 web:hover:opacity-90",
-        outline:
-          "border border-input bg-background active:bg-accent web:hover:bg-accent web:hover:text-accent-foreground",
+        outline: [
+          `border border-input bg-background active:bg-accent web:hover:bg-accent
+          web:hover:text-accent-foreground`,
+        ],
         secondary: "bg-secondary active:opacity-80 web:hover:opacity-80",
         ghost: "active:bg-accent web:hover:bg-accent web:hover:text-accent-foreground",
         link: "web:underline-offset-4 web:hover:underline web:focus:underline ",

@@ -4,5 +4,12 @@
   "singleQuote": false,
   "bracketSameLine": true,
   "trailingComma": "es5",
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "plugins": [
+    "prettier-plugin-classnames"
+  ],
+  "endingPosition": "absolute-with-indent",
+  "customFunctions": [
+    "cva"
+  ]
 }
