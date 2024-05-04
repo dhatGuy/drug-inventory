@@ -1,9 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Modal from "../screens/modal";
 import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
+import Modal from "../screens/modal";
 
 export type RootStackParamList = {
   TabNavigator: undefined;
@@ -28,16 +28,16 @@ export default function RootStack() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="TabNavigator"
-          component={TabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
           name="AuthStack"
           options={{
             headerShown: false,
           }}
           component={AuthStack}
+        />
+        <Stack.Screen
+          name="TabNavigator"
+          component={TabNavigator}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Modal"

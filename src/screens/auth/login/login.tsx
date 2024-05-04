@@ -1,10 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { StyledSafeAreaView } from "~/components";
-import { Button, Input, Text } from "~/components/ui";
+import { Button, Input } from "~/components/ui";
 
 export default function Login({ navigation }) {
   const [form, setForm] = useState({
@@ -16,65 +16,63 @@ export default function Login({ navigation }) {
 
   return (
     <StyledSafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerIcon}>
-            <MaterialIcons color="#075eec" name="inventory-2" size={44} />
-          </View>
-
-          <Text style={styles.title}>
-            Welcome to <Text style={{ color: "#0742fc" }}>Emzor Inventory</Text>
-          </Text>
-
-          <Text style={styles.subtitle}>Manage your drug inventory with ease and efficiency</Text>
+      <View className="my-9">
+        <View className="mb-9 size-20 items-center justify-center self-center">
+          <MaterialIcons color="#075eec" name="inventory-2" size={44} />
         </View>
 
-        <View style={styles.form}>
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Email address</Text>
+        <Text className="text-center text-[27px] font-bold">
+          Welcome to <Text className="text-blue-900">Emzor Inventory</Text>
+        </Text>
 
-            <Input
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
-              placeholder=""
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={form.email}
-            />
-          </View>
+        <Text style={styles.subtitle}>Manage your drug inventory with ease and efficiency</Text>
+      </View>
 
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>Password</Text>
+      <View style={styles.form}>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Email address</Text>
 
-            <Input
-              autoCorrect={false}
-              onChangeText={(password) => setForm({ ...form, password })}
-              placeholder=""
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              secureTextEntry
-              value={form.password}
-            />
-          </View>
+          <Input
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            onChangeText={(email) => setForm({ ...form, email })}
+            placeholder=""
+            placeholderTextColor="#6b7280"
+            style={styles.inputControl}
+            value={form.email}
+          />
+        </View>
 
-          <View style={styles.formAction}>
-            <Button
-              onPress={() => {
-                // handle onPress
-              }}>
-              <Text>Sign in</Text>
-            </Button>
+        <View style={styles.input}>
+          <Text style={styles.inputLabel}>Password</Text>
 
-            <Button
-              variant="outline"
-              onPress={() => {
-                navigation.navigate("Signup");
-              }}>
-              <Text>Sign up</Text>
-            </Button>
-          </View>
+          <Input
+            autoCorrect={false}
+            onChangeText={(password) => setForm({ ...form, password })}
+            placeholder=""
+            placeholderTextColor="#6b7280"
+            style={styles.inputControl}
+            secureTextEntry
+            value={form.password}
+          />
+        </View>
+
+        <View style={styles.formAction}>
+          <Button
+            onPress={() => {
+              // handle onPress
+            }}>
+            <Text>Sign in</Text>
+          </Button>
+
+          <Button
+            variant="outline"
+            onPress={() => {
+              navigation.navigate("Signup");
+            }}>
+            <Text>Sign up</Text>
+          </Button>
         </View>
       </View>
     </StyledSafeAreaView>
@@ -82,12 +80,6 @@ export default function Login({ navigation }) {
 }
 
 const stylesheet = createStyleSheet({
-  container: {
-    padding: 24,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
   title: {
     fontSize: 27,
     fontFamily: "Poppins_700Bold",
@@ -99,20 +91,6 @@ const stylesheet = createStyleSheet({
     fontSize: 15,
     color: "#929292",
     textAlign: "center",
-  },
-  /** Header */
-  header: {
-    marginVertical: 36,
-  },
-  headerIcon: {
-    alignSelf: "center",
-    width: 80,
-    height: 80,
-    marginBottom: 36,
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
   },
   /** Form */
   form: {

@@ -1,27 +1,25 @@
-import React, { ReactNode } from "react";
-import { Text as RNText, TextProps as RNTextProps } from "react-native";
-import { useStyles } from "react-native-unistyles";
+import * as React from "react";
+import { Text as RNText } from "react-native";
 
-const TextClassContext = React.createContext({});
+import * as Slot from "~/components/primitives/slot";
+import { SlottableTextProps, TextRef } from "~/components/primitives/types";
+import { cn } from "~/lib/utils";
 
-interface TextProps extends RNTextProps {
-  asChild?: boolean;
-  style?: React.ComponentProps<typeof RNText>["style"];
-}
+const TextClassContext = React.createContext<string | undefined>(undefined);
 
-/**
- * Renders a text component with specified styles and properties.
- * @param {boolean} asChild - TODO: Flag indicating if the text is a child element.
- * @param {style} style - Custom style for the text.
- * @return {ReactNode} Rendered text component.
- */
-const Text = ({ asChild = false, style, ...props }: TextProps): ReactNode => {
-  const textStyles = React.useContext(TextClassContext);
-  const { theme } = useStyles();
-
-  // const Component = asChild ? Slot.Text : RNText;
-  return <RNText style={[theme.components.text, textStyles, style]} {...props} />;
-};
+const Text = React.forwardRef<TextRef, SlottableTextProps>(
+  ({ className, asChild = false, ...props }, ref) => {
+    const textClass = React.useContext(TextClassContext);
+    const Component = asChild ? Slot.Text : RNText;
+    return (
+      <Component
+        className={cn("text-base text-foreground web:select-text", textClass, className)}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
 Text.displayName = "Text";
 
 export { Text, TextClassContext };

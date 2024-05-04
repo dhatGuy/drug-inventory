@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native';
-import { useStyles } from 'react-native-unistyles';
+import { Text, View } from "react-native";
+import { useStyles } from "react-native-unistyles";
 
-import EditScreenInfo from '../components/edit-screen-info';
+import EditScreenInfo from "../components/edit-screen-info";
 
 export default function TabTwoScreen() {
   const { theme } = useStyles();

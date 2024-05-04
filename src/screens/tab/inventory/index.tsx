@@ -9,7 +9,7 @@ import { stylesheet } from "./index.style";
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Input, Text } from "~/components/ui";
 import { useBackHandler } from "~/hooks/useBackHandler";
-export default function Inventory() {
+export default function Inventory({ navigation }) {
   const { styles } = useStyles(stylesheet);
   const [showScanner, setShowScanner] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -96,7 +96,7 @@ export default function Inventory() {
         />
       )}
 
-      <Button style={styles.addItem}>
+      <Button style={styles.addItem} onPress={() => navigation.navigate("NewItem")}>
         <Feather name="plus" color="white" size={26} />
       </Button>
     </StyledSafeAreaView>

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Text, View } from 'react-native';
-import { createStyleSheet, useStyles } from 'react-native-unistyles';
+import React from "react";
+import { Text, View } from "react-native";
+import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 export default function EditScreenInfo({ path }: { path: string }) {
   const { styles } = useStyles(stylesheet);
@@ -27,16 +27,16 @@ const stylesheet = createStyleSheet({
     paddingHorizontal: 4,
   },
   getStartedContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 50,
   },
   getStartedText: {
     fontSize: 17,
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   helpContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 20,
     marginTop: 15,
   },
@@ -44,7 +44,7 @@ const stylesheet = createStyleSheet({
     paddingVertical: 15,
   },
   helpLinkText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   homeScreenFilename: {
     marginVertical: 7,

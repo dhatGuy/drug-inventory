@@ -115,13 +115,13 @@ export default function Signup({ navigation }) {
 }
 
 const stylesheet = createStyleSheet({
-  container: {
-    paddingVertical: 24,
-    paddingHorizontal: 0,
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
+  // container: {
+  //   paddingVertical: 24,
+  //   paddingHorizontal: 0,
+  //   flexGrow: 1,
+  //   flexShrink: 1,
+  //   flexBasis: 0,
+  // },
   title: {
     fontSize: 31,
     fontFamily: "Poppins_700Bold",
