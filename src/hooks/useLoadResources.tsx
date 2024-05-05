@@ -9,15 +9,31 @@ import {
   Poppins_800ExtraBold,
   Poppins_900Black,
 } from "@expo-google-fonts/poppins";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 
+import { useColorScheme } from "~/lib/useColorScheme";
+
 export default function useLoadResources() {
+  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
+  const selectedTheme = async () => {
+    const theme = await AsyncStorage.getItem("theme");
+    const colorTheme = theme === "dark" ? "dark" : "light";
+    if (!theme) {
+      await AsyncStorage.setItem("theme", colorScheme);
+    } else if (colorTheme !== colorScheme) {
+      setColorScheme(colorTheme);
+    } else {
+      setColorScheme(colorScheme);
+    }
+  };
+
   useEffect(() => {
-    async function loadResources() {
+    (async () => {
       try {
         await Font.loadAsync({
           Poppins_100Thin,
@@ -30,15 +46,15 @@ export default function useLoadResources() {
           Poppins_800ExtraBold,
           Poppins_900Black,
         });
+
+        await selectedTheme();
       } catch (e) {
         console.warn(e);
         setError(true);
       } finally {
         setLoaded(true);
       }
-    }
-
-    loadResources();
+    })();
   }, []);
 
   return { loaded, error };

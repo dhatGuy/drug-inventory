@@ -5015,7 +5015,7 @@ __metadata:
     expo-font: ~11.10.3
     expo-splash-screen: ~0.26.4
     expo-status-bar: ~1.11.1
-    nativewind: 4.0.1
+    nativewind: canary
     prettier: ^3.2.5
     prettier-plugin-classnames: ^0.6.6
     react: 18.2.0
@@ -8664,18 +8664,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nativewind@npm:4.0.1":
-  version: 4.0.1
-  resolution: "nativewind@npm:4.0.1"
+"nativewind@npm:canary":
+  version: 4.0.36
+  resolution: "nativewind@npm:4.0.36"
   dependencies:
-    react-native-css-interop: 0.0.1
+    react-native-css-interop: 0.0.36
   peerDependencies:
-    react-native-reanimated: ">=3.3.0"
     tailwindcss: ">3.3.0"
-  peerDependenciesMeta:
-    react-native-reanimated:
-      optional: true
-  checksum: ff4b82da074e74bcbab40c46ff10df495d945cf48a71613b29b21fd31151512c08937ac8d3730713ec0a4687787f5b0f70c63f05c8cca34179b05df8076f6ab5
+  checksum: 8b17b06a5453244efea59151b8e32721b73c0341c3721b2714fdb60756bd1df68f87cc72ffdc07b9741de6088bc4a01ed68cb80a59e0ca47c28e325dfed2d600
   languageName: node
   linkType: hard
 
@@ -9729,9 +9725,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-css-interop@npm:0.0.1":
-  version: 0.0.1
-  resolution: "react-native-css-interop@npm:0.0.1"
+"react-native-css-interop@npm:0.0.36":
+  version: 0.0.36
+  resolution: "react-native-css-interop@npm:0.0.36"
   dependencies:
     "@babel/helper-module-imports": ^7.22.15
     "@babel/traverse": ^7.23.0
@@ -9741,12 +9737,14 @@ __metadata:
   peerDependencies:
     react: ">=18"
     react-native: "*"
-    react-native-reanimated: ">=3.3.0"
+    react-native-reanimated: ">=3.6.2"
     tailwindcss: ~3
   peerDependenciesMeta:
-    react-native-reanimated:
+    react-native-safe-area-context:
       optional: true
-  checksum: e68c04749ada8d761ce8100af77c019bd8eaa9671ec91aa70e0d48d11469616d14c0ffbf728d3b02eb065885b312885edbf61057c66b0fc3f88767b16bcb8061
+    react-native-svg:
+      optional: true
+  checksum: 7b29bfff2c523da2dc33ad7daaf3d6a69b9814140bf512736fe90005cc98ab130cb816b1d459a3349476f04b012c3d41e0e146ea1f7367a9d33a515adbb1b490
   languageName: node
   linkType: hard
 
