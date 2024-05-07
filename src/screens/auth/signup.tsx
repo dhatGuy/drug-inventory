@@ -1,25 +1,51 @@
 import FeatherIcon from "@expo/vector-icons/Feather";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@react-navigation/native";
 import { useState } from "react";
-import { View } from "react-native";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { ActivityIndicator, View } from "react-native";
+import { AppwriteException } from "react-native-appwrite/src";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { StyledSafeAreaView } from "~/components";
-import { Button, Input, Text } from "~/components/ui";
+import RHFInput from "~/components/rhfInput";
+import { Button, Text } from "~/components/ui";
 import { Label } from "~/components/ui/label";
-import { H2 } from "~/components/ui/typography";
+import { H2, P } from "~/components/ui/typography";
+import { useCreateUser } from "~/hooks/auth";
+import { SignupSchema } from "~/lib/validation";
 
 export default function Signup({ navigation }) {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const [serverError, setServerError] = useState("");
+  const formMethods = useForm<SignupSchema>({
+    resolver: zodResolver(SignupSchema),
   });
 
+  const createUserMutation = useCreateUser();
+
+  const onSubmit: SubmitHandler<SignupSchema> = async (data) => {
+    setServerError("");
+
+    const { confirmPassword, ...formValues } = data;
+    createUserMutation.mutate(formValues, {
+      onSuccess: (data) => console.log("🚀 ~ onSubmit ~ data:", data),
+      onError: (error) => {
+        console.log("🚀 ~ onSubmit ~ error:", error);
+
+        if (error instanceof AppwriteException) {
+          if (error.type === "user_already_exists") {
+            formMethods.setError("email", { message: "User already exists" });
+          }
+        } else {
+          setServerError("Something went wrong");
+        }
+      },
+    });
+  };
+
   return (
-    <StyledSafeAreaView>
-      <KeyboardAwareScrollView>
+    <StyledSafeAreaView className="pt-0">
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <View className="mb-6 items-start justify-start">
           <Button
             variant="ghost"
@@ -35,79 +61,82 @@ export default function Signup({ navigation }) {
           </Text>
         </View>
 
-        <View className="mb-6 shrink grow basis-0">
-          <View className="mb-4">
-            <Text nativeID="name" className="native:text-xl mb-2 font-PoppinsSemiBold">
-              Full Name
-            </Text>
+        <FormProvider {...formMethods}>
+          <View className="mb-6 shrink grow basis-0">
+            <View className="mb-4">
+              <Text nativeID="name" className="native:text-xl mb-2 font-PoppinsSemiBold">
+                Full Name
+              </Text>
 
-            <Input
-              clearButtonMode="while-editing"
-              onChangeText={(name) => setForm({ ...form, name })}
-              placeholder="John Doe"
-              placeholderTextColor="#6b7280"
-              value={form.name}
-            />
+              <RHFInput
+                name="name"
+                clearButtonMode="while-editing"
+                placeholder="John Doe"
+                placeholderTextColor="#6b7280"
+              />
+            </View>
+
+            <View className="mb-4">
+              <Text nativeID="email" className="native:text-xl mb-2 font-PoppinsSemiBold">
+                Email Address
+              </Text>
+
+              <RHFInput
+                name="email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                keyboardType="email-address"
+                placeholder="john@example.com"
+                placeholderTextColor="#6b7280"
+              />
+            </View>
+
+            <View className="mb-4">
+              <Text nativeID="password" className="native:text-xl mb-2 font-PoppinsSemiBold">
+                Password
+              </Text>
+
+              <RHFInput
+                name="password"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                placeholder="********"
+                placeholderTextColor="#6b7280"
+                secureTextEntry
+              />
+            </View>
+
+            <View className="mb-4">
+              <Label
+                nativeID="confirmPassword"
+                className="native:text-xl mb-2 font-PoppinsSemiBold">
+                Confirm Password
+              </Label>
+
+              <RHFInput
+                name="confirmPassword"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                placeholder="********"
+                placeholderTextColor="#6b7280"
+                secureTextEntry
+              />
+            </View>
+
+            {serverError && <P className="text-red-500">{serverError}</P>}
+
+            <View className="mb-4 mt-1">
+              <Button
+                onPress={formMethods.handleSubmit(onSubmit)}
+                className="flex-row items-center justify-center gap-2"
+                disabled={createUserMutation.isPending}>
+                {createUserMutation.isPending && <ActivityIndicator />}
+                <Text className="text-white">Get Started</Text>
+              </Button>
+            </View>
           </View>
-
-          <View className="mb-4">
-            <Text nativeID="email" className="native:text-xl mb-2 font-PoppinsSemiBold">
-              Email Address
-            </Text>
-
-            <Input
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
-              placeholder="john@example.com"
-              placeholderTextColor="#6b7280"
-              value={form.email}
-            />
-          </View>
-
-          <View className="mb-4">
-            <Text nativeID="password" className="native:text-xl mb-2 font-PoppinsSemiBold">
-              Password
-            </Text>
-
-            <Input
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={(password) => setForm({ ...form, password })}
-              placeholder="********"
-              placeholderTextColor="#6b7280"
-              secureTextEntry
-              value={form.password}
-            />
-          </View>
-
-          <View className="mb-4">
-            <Label nativeID="confirmPassword" className="native:text-xl mb-2 font-PoppinsSemiBold">
-              Confirm Password
-            </Label>
-
-            <Input
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              onChangeText={(confirmPassword) => setForm({ ...form, confirmPassword })}
-              placeholder="********"
-              placeholderTextColor="#6b7280"
-              secureTextEntry
-              value={form.confirmPassword}
-            />
-          </View>
-
-          <View className="mb-4 mt-1">
-            <Button
-              onPress={() => {
-                // handle onPress
-              }}>
-              <Text>Get Started</Text>
-            </Button>
-          </View>
-        </View>
+        </FormProvider>
       </KeyboardAwareScrollView>
 
       <Text className="mt-auto text-center font-PoppinsSemiBold">

@@ -1,9 +1,10 @@
+import "react-native-gesture-handler";
 import "~/global.css";
 
 import { Theme, ThemeProvider } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import "react-native-gesture-handler";
 
 import ErrorBoundary from "~/components/error-boundary";
 import { PortalHost } from "~/components/primitives/portal";
@@ -11,6 +12,7 @@ import useLoadResources from "~/hooks/useLoadResources";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import RootStack from "~/navigation";
+import { useAuthStatus } from "~/store/authStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,11 +24,14 @@ const DARK_THEME: Theme = {
   dark: true,
   colors: NAV_THEME.dark,
 };
+
+const queryClient = new QueryClient();
 export default function App() {
   const { loaded, error } = useLoadResources();
+  const authStatus = useAuthStatus();
   const { isDarkColorScheme } = useColorScheme();
 
-  if (!loaded) {
+  if (!loaded || authStatus === "idle") {
     return null;
   }
 
@@ -34,7 +39,9 @@ export default function App() {
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
       <ErrorBoundary>
-        <RootStack isLoaded={loaded} />
+        <QueryClientProvider client={queryClient}>
+          <RootStack isLoaded={loaded} />
+        </QueryClientProvider>
       </ErrorBoundary>
       <PortalHost />
     </ThemeProvider>

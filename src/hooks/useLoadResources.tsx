@@ -14,9 +14,11 @@ import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 
 import { useColorScheme } from "~/lib/useColorScheme";
+import { useUserActions } from "~/store/authStore";
 
 export default function useLoadResources() {
   const { colorScheme, setColorScheme } = useColorScheme();
+  const { hydrate } = useUserActions();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
@@ -35,6 +37,8 @@ export default function useLoadResources() {
   useEffect(() => {
     (async () => {
       try {
+        hydrate();
+
         await Font.loadAsync({
           Poppins_100Thin,
           Poppins_200ExtraLight,

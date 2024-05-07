@@ -1,21 +1,56 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@react-navigation/native";
 import { useState } from "react";
-import { View } from "react-native";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { ActivityIndicator, View } from "react-native";
+import { AppwriteException } from "react-native-appwrite/src";
 
 import { StyledSafeAreaView } from "~/components";
-import { Button, Input, Text } from "~/components/ui";
+import RHFInput from "~/components/rhfInput";
+import { Button, Text } from "~/components/ui";
 import { Label } from "~/components/ui/label";
-import { H1 } from "~/components/ui/typography";
+import { H1, P } from "~/components/ui/typography";
+import { useLoginUser } from "~/hooks/auth";
+import { LoginSchema } from "~/lib/validation";
+import { useUser, useUserActions } from "~/store/authStore";
 
 export default function Login({ navigation }) {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
+  const formMethods = useForm<LoginSchema>({
+    resolver: zodResolver(LoginSchema),
   });
+  const loginUserMutation = useLoginUser();
+  const { setUser, hydrate } = useUserActions();
+  const userState = useUser();
+
+  console.log("🚀 ~ file: login.tsx:Login ~ userState:", userState);
+
+  const [serverError, setServerError] = useState("");
+
+  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+    setServerError("");
+
+    loginUserMutation.mutate(data, {
+      onSuccess: (data) => {
+        setUser(data);
+      },
+      onError: (error) => {
+        console.log("🚀 ~ onSubmit ~ error:", error);
+        if (error instanceof AppwriteException) {
+          if (error.type === "user_invalid_credentials") {
+            setServerError("Invalid credentials");
+          } else if (error.type === "user_session_already_exists") {
+            hydrate();
+          }
+        } else {
+          setServerError("Something went wrong");
+        }
+      },
+    });
+  };
 
   return (
-    <StyledSafeAreaView>
+    <StyledSafeAreaView className="pt-0">
       <View className="my-9">
         <View className="mb-9 size-20 items-center justify-center self-center">
           <MaterialIcons color="#075eec" name="inventory-2" size={44} />
@@ -30,52 +65,54 @@ export default function Login({ navigation }) {
         </Text>
       </View>
 
-      <View className="gap-4">
-        <View className="gap-1">
-          <Label nativeID="email">Email address</Label>
+      <FormProvider {...formMethods}>
+        <View className="gap-4">
+          <View className="gap-1">
+            <Label nativeID="email">Email address</Label>
 
-          <Input
-            aria-labelledby="email"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="email-address"
-            onChangeText={(email) => setForm({ ...form, email })}
-            placeholder="Email address"
-            className="rounded-xl"
-            value={form.email}
-          />
+            <RHFInput
+              name="email"
+              aria-labelledby="email"
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              placeholder="Email address"
+              className="rounded-xl"
+            />
+          </View>
+
+          <View className="gap-1">
+            <Label nativeID="password">Password</Label>
+
+            <RHFInput
+              name="password"
+              aria-labelledby="password"
+              autoCorrect={false}
+              placeholder="*********"
+              className="rounded-xl"
+              secureTextEntry
+            />
+          </View>
+          {serverError && <P className="text-red-500">{serverError}</P>}
+
+          <View className="mt-6 gap-3">
+            <Button
+              onPress={formMethods.handleSubmit(onSubmit)}
+              className="flex-row items-center justify-center gap-2"
+              disabled={loginUserMutation.isPending}>
+              {loginUserMutation.isPending && <ActivityIndicator />}
+              <Text className="text-white">Sign in</Text>
+            </Button>
+
+            <Text className="text-center">
+              Don't have an account?{" "}
+              <Link to="/Signup">
+                <Text className="underline">Sign up</Text>
+              </Link>
+            </Text>
+          </View>
         </View>
-
-        <View className="gap-1">
-          <Label nativeID="password">Password</Label>
-
-          <Input
-            aria-labelledby="password"
-            autoCorrect={false}
-            onChangeText={(password) => setForm({ ...form, password })}
-            placeholder="*********"
-            className="rounded-xl"
-            secureTextEntry
-            value={form.password}
-          />
-        </View>
-
-        <View className="mt-6 gap-3">
-          <Button
-            onPress={() => {
-              // handle onPress
-            }}>
-            <Text>Sign in</Text>
-          </Button>
-
-          <Text className="text-center">
-            Don't have an account?{" "}
-            <Link to="/Signup">
-              <Text className="underline">Sign up</Text>
-            </Link>
-          </Text>
-        </View>
-      </View>
+      </FormProvider>
     </StyledSafeAreaView>
   );
 }

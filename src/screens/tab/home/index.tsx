@@ -7,15 +7,18 @@ import { BarGroup, CartesianChart } from "victory-native";
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Text } from "~/components/ui";
 import { H3, H4 } from "~/components/ui/typography";
+import { useUser, useUserActions } from "~/store/authStore";
 
 export default function Home() {
   const font = useFont(poppins, 12);
+  const { signOut } = useUserActions();
+  const user = useUser();
 
   return (
     <StyledSafeAreaView className="p-1">
       <View className="flex-row items-center justify-between">
         <Text>
-          Hello <Text>Randy</Text>
+          Hello <Text>{user?.name}</Text>
         </Text>
 
         <View className="flex-row items-center justify-end">
@@ -23,9 +26,7 @@ export default function Home() {
             variant="ghost"
             size="icon"
             className="rounded-full border border-[#1e1e1e]"
-            onPress={() => {
-              // handle onPress
-            }}>
+            onPress={signOut}>
             <FeatherIcon color="#222" name="bell" size={20} />
           </Button>
         </View>
