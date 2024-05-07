@@ -3,10 +3,10 @@ import "~/global.css";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
 import "react-native-gesture-handler";
 
 import ErrorBoundary from "~/components/error-boundary";
+import { PortalHost } from "~/components/primitives/portal";
 import useLoadResources from "~/hooks/useLoadResources";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -26,12 +26,6 @@ export default function App() {
   const { loaded, error } = useLoadResources();
   const { isDarkColorScheme } = useColorScheme();
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
   if (!loaded) {
     return null;
   }
@@ -40,8 +34,9 @@ export default function App() {
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
       <ErrorBoundary>
-        <RootStack />
+        <RootStack isLoaded={loaded} />
       </ErrorBoundary>
+      <PortalHost />
     </ThemeProvider>
   );
 }

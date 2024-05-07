@@ -1,5 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as SplashScreen from "expo-splash-screen";
+import React from "react";
+import { ActivityIndicator, Linking } from "react-native";
 
 import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
@@ -22,21 +26,61 @@ export type TabNavigatorParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-export default function RootStack() {
+const PERSISTENCE_KEY = "NAVIGATION_STATE_V1";
+
+export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
+  const [isReady, setIsReady] = React.useState(!__DEV__);
+  const [initialState, setInitialState] = React.useState();
+
+  React.useEffect(() => {
+    const restoreState = async () => {
+      try {
+        const initialUrl = await Linking.getInitialURL();
+
+        if (initialUrl == null) {
+          const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY);
+          const state = savedStateString ? JSON.parse(savedStateString) : undefined;
+
+          if (state !== undefined) {
+            setInitialState(state);
+          }
+        }
+      } finally {
+        setIsReady(true);
+      }
+    };
+
+    if (!isReady) {
+      restoreState();
+    }
+
+    if (isLoaded && isReady) {
+      setTimeout(() => {
+        SplashScreen.hideAsync();
+      }, 100);
+    }
+  }, [isReady]);
+
+  if (!isReady) {
+    return <ActivityIndicator />;
+  }
+
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      initialState={initialState}
+      onStateChange={(state) => AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))}>
       <Stack.Navigator>
+        <Stack.Screen
+          name="TabNavigator"
+          component={TabNavigator}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="AuthStack"
           options={{
             headerShown: false,
           }}
           component={AuthStack}
-        />
-        <Stack.Screen
-          name="TabNavigator"
-          component={TabNavigator}
-          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

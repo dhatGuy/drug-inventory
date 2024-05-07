@@ -1,10 +1,12 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { Link } from "@react-navigation/native";
 import { useState } from "react";
 import { View } from "react-native";
 
 import { StyledSafeAreaView } from "~/components";
 import { Button, Input, Text } from "~/components/ui";
 import { Label } from "~/components/ui/label";
+import { H1 } from "~/components/ui/typography";
 
 export default function Login({ navigation }) {
   const [form, setForm] = useState({
@@ -19,9 +21,9 @@ export default function Login({ navigation }) {
           <MaterialIcons color="#075eec" name="inventory-2" size={44} />
         </View>
 
-        <Text className="mb-1 text-center font-PoppinsBold text-[27px] text-[#1d1d1d]">
-          Welcome to <Text className="text-blue-900">Emzor Inventory</Text>
-        </Text>
+        <H1 className="mb-1 text-center text-[#1d1d1d]">
+          Welcome to <H1 className="text-blue-900">Emzor Inventory</H1>
+        </H1>
 
         <Text className="text-center text-gray-500">
           Manage your drug inventory with ease and efficiency
@@ -66,13 +68,12 @@ export default function Login({ navigation }) {
             <Text>Sign in</Text>
           </Button>
 
-          <Button
-            variant="outline"
-            onPress={() => {
-              navigation.navigate("Signup");
-            }}>
-            <Text>Sign up</Text>
-          </Button>
+          <Text className="text-center">
+            Don't have an account?{" "}
+            <Link to="/Signup">
+              <Text className="underline">Sign up</Text>
+            </Link>
+          </Text>
         </View>
       </View>
     </StyledSafeAreaView>

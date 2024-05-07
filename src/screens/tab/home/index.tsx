@@ -2,29 +2,27 @@ import FeatherIcon from "@expo/vector-icons/Feather";
 import { useFont } from "@shopify/react-native-skia";
 import poppins from "assets/fonts/Poppins-Medium.ttf";
 import { ScrollView, View } from "react-native";
-import { useStyles } from "react-native-unistyles";
 import { BarGroup, CartesianChart } from "victory-native";
-
-import { stylesheet } from "./index.style";
 
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Text } from "~/components/ui";
+import { H3, H4 } from "~/components/ui/typography";
 
 export default function Home() {
-  const { styles } = useStyles(stylesheet);
   const font = useFont(poppins, 12);
 
   return (
-    <StyledSafeAreaView>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>
-          Hello <Text style={{ fontFamily: "Poppins_700Bold" }}>Randy</Text>
+    <StyledSafeAreaView className="p-1">
+      <View className="flex-row items-center justify-between">
+        <Text>
+          Hello <Text>Randy</Text>
         </Text>
 
-        <View style={styles.headerActions}>
+        <View className="flex-row items-center justify-end">
           <Button
             variant="ghost"
-            style={styles.headerNotifications}
+            size="icon"
+            className="rounded-full border border-[#1e1e1e]"
             onPress={() => {
               // handle onPress
             }}>
@@ -32,80 +30,83 @@ export default function Home() {
           </Button>
         </View>
       </View>
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContainer}>
-        <View style={styles.stats}>
-          <View style={styles.statsRow}>
-            <View style={styles.statsItem}>
-              <View style={styles.statsItemIcon}>
+      <ScrollView
+        className=""
+        contentContainerClassName="pb-10"
+        showsVerticalScrollIndicator={false}>
+        <View>
+          <View className="mx-[-10px] flex-row">
+            <View className="mx-[6px] mb-3 flex-1 flex-row items-center gap-2 rounded-xl px-4 py-3">
+              <View className="size-14 flex-row items-center justify-center rounded-lg bg-[#faad55]">
                 <FeatherIcon color="#fff" name="users" size={22} />
               </View>
 
               <View>
-                <Text style={styles.statsItemLabel}>Total Items</Text>
+                <Text className="text-[#8e8e93]">Total Items</Text>
 
-                <Text style={styles.statsItemValue}>12</Text>
+                <H4 className="text-2xl text-[#081730]">12</H4>
               </View>
             </View>
 
-            <View style={styles.statsItem}>
-              <View style={styles.statsItemIcon}>
+            <View className="mx-[6px] mb-3 flex-1 flex-row items-center gap-2 rounded-xl px-4 py-3">
+              <View className="size-14 flex-row items-center justify-center rounded-lg bg-[#faad55]">
                 <FeatherIcon color="#fff" name="grid" size={22} />
               </View>
 
               <View>
-                <Text style={styles.statsItemLabel}>Available Units</Text>
+                <Text className="text-[#8e8e93]">Available Units</Text>
 
-                <Text style={styles.statsItemValue}>150</Text>
+                <H4 className="text-2xl text-[#081730]">150</H4>
               </View>
             </View>
           </View>
         </View>
 
-        <View style={styles.stats}>
-          <View style={styles.statsRow}>
-            <View style={styles.statsItem}>
-              <View style={styles.statsItemIcon}>
+        <View className="items-stretch justify-center">
+          <View className="mx-[-6px] flex-row">
+            <View className="mx-[6px] mb-3 flex-1 flex-row items-center gap-2 rounded-xl px-4 py-3">
+              <View className="size-14 flex-row items-center justify-center rounded-lg bg-[#faad55]">
                 <FeatherIcon color="#fff" name="users" size={22} />
               </View>
 
               <View>
-                <Text style={styles.statsItemLabel}>Low Stock</Text>
+                <Text className="text-[#8e8e93]">Low Stock</Text>
 
-                <Text style={styles.statsItemValue}>4</Text>
+                <H4 className="text-2xl text-[#081730]">8</H4>
               </View>
             </View>
 
-            <View style={styles.statsItem}>
-              <View style={styles.statsItemIcon}>
+            <View className="mx-[6px] mb-3 flex-1 flex-row items-center gap-2 rounded-xl px-4 py-3">
+              <View className="size-14 flex-row items-center justify-center rounded-lg bg-[#faad55]">
                 <FeatherIcon color="#fff" name="grid" size={22} />
               </View>
 
               <View>
-                <Text style={styles.statsItemLabel}>Expiring Soon</Text>
+                <Text className="text-[#8e8e93]">Expiring Soon</Text>
 
-                <Text style={styles.statsItemValue}>9</Text>
+                <H4 className="text-2xl text-[#081730]">9</H4>
               </View>
             </View>
           </View>
         </View>
 
         <View>
-          <View style={styles.itemListHeader}>
-            <Text style={styles.itemListTitle}>Items</Text>
-            <Button variant="link">
+          <View className="flex-row items-center justify-between">
+            <H3>Items</H3>
+            <Button className="!px-0" variant="link">
               <Text>View All</Text>
             </Button>
           </View>
-          <View style={styles.cardList}>
+          <View className="gap-3">
             {items.map((item, index) => {
               return <InventoryItem item={item} key={index} />;
             })}
           </View>
         </View>
 
-        <View style={styles.analytics}>
-          <Text style={styles.analyticsTitle}>Analytics</Text>
-          <View style={{ height: 300 }}>
+        <View className="pt-6">
+          <H3 className="">Analytics</H3>
+          <View className="min-h-[300px]">
             <CartesianChart
               data={DATA}
               xKey="x"

@@ -1,16 +1,18 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera/next";
+import { cssInterop } from "nativewind";
 import { useState } from "react";
-import { FlatList, View } from "react-native";
-import { useStyles } from "react-native-unistyles";
-
-import { stylesheet } from "./index.style";
+import { Alert, FlatList, View } from "react-native";
 
 import { InventoryItem, StyledSafeAreaView } from "~/components";
-import { Button, Input, Text } from "~/components/ui";
+import { Button, Input } from "~/components/ui";
+import { H2 } from "~/components/ui/typography";
 import { useBackHandler } from "~/hooks/useBackHandler";
+
+cssInterop(CameraView, {
+  className: "style",
+});
 export default function Inventory({ navigation }) {
-  const { styles } = useStyles(stylesheet);
   const [showScanner, setShowScanner] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [permission, requestPermission] = useCameraPermissions();
@@ -28,6 +30,8 @@ export default function Inventory({ navigation }) {
       requestPermission().then((res) => {
         if (res.granted) {
           setShowScanner(true);
+        } else {
+          Alert.alert("Camera permission denied");
         }
       });
     } else if (permission?.granted) {
@@ -42,16 +46,16 @@ export default function Inventory({ navigation }) {
   };
 
   return (
-    <StyledSafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>Inventory</Text>
-        <Button variant="ghost">
+    <StyledSafeAreaView>
+      <View className="flex-row items-center justify-between">
+        <H2 className="pb-0">Inventory</H2>
+        <Button variant="ghost" size="icon">
           <MaterialCommunityIcons name="sort" size={24} />
         </Button>
       </View>
 
-      <View style={styles.headerSearch}>
-        <View style={styles.headerSearchIcon}>
+      <View className="relative">
+        <View className="absolute inset-y-0 left-0 z-10 size-[40] h-full items-center justify-center">
           <Feather color="#121A26" name="search" size={19} />
         </View>
 
@@ -62,18 +66,21 @@ export default function Inventory({ navigation }) {
           clearButtonMode="always"
           value={searchText}
           onChangeText={setSearchText}
-          style={styles.headerSearchInput}
+          className="rounded-lg bg-white pl-10 pr-11 shadow-lg shadow-black/5"
         />
 
-        <Button variant="ghost" onPress={onBtnCodePressed} style={styles.btnBarcode}>
+        <Button
+          variant="ghost"
+          onPress={onBtnCodePressed}
+          size="icon"
+          className="absolute inset-y-0 right-0 my-auto h-full">
           <MaterialCommunityIcons name="barcode-scan" size={24} />
         </Button>
       </View>
 
       <FlatList
         data={items}
-        style={styles.itemList}
-        contentContainerStyle={styles.itemListContent}
+        contentContainerClassName="gap-4 py-8"
         renderItem={({ item }) => <InventoryItem item={item} />}
         keyExtractor={(item) => item.label}
       />
@@ -96,7 +103,10 @@ export default function Inventory({ navigation }) {
         />
       )}
 
-      <Button style={styles.addItem} onPress={() => navigation.navigate("NewItem")}>
+      <Button
+        className="absolute bottom-6 right-6 size-12 rounded-full shadow-lg"
+        size="icon"
+        onPress={() => navigation.navigate("NewItem")}>
         <Feather name="plus" color="white" size={26} />
       </Button>
     </StyledSafeAreaView>

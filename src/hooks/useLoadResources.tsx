@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useColorScheme } from "~/lib/useColorScheme";
 
 export default function useLoadResources() {
-  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
