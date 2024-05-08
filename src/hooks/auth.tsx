@@ -5,15 +5,20 @@ import { account } from "~/lib/appWrite";
 import { useUserActions } from "~/store/authStore";
 
 export const useCreateUser = () => {
-  const { setUser } = useUserActions();
+  const { hydrate } = useUserActions();
 
   const createUser = async (email: string, password: string, name: string) => {
-    await account.create(ID.unique(), email, password, name);
-    const response = await account.createEmailPasswordSession(email, password);
-    setUser(response);
-    // console.log("🚀 ~ createUser ~ response:", response);
+    try {
+      const newUser = await account.create(ID.unique(), email, password, name);
+      await account.createEmailPasswordSession(email, password);
+      hydrate();
 
-    return response;
+      return newUser;
+    } catch (error) {
+      console.log("🚀 ~ createUser ~ error:", error);
+      throw error;
+    }
+    // console.log("🚀 ~ createUser ~ response:", response);
   };
 
   return useMutation({
@@ -23,10 +28,16 @@ export const useCreateUser = () => {
 };
 
 export const useLoginUser = () => {
+  const { hydrate } = useUserActions();
   const loginUser = async (email: string, password: string) => {
-    const response = await account.createEmailPasswordSession(email, password);
-    // console.log("🚀 ~ loginUser ~ response:", response);
-    return response;
+    try {
+      const response = await account.createEmailPasswordSession(email, password);
+      hydrate();
+      return response;
+    } catch (error) {
+      console.log("🚀 ~ loginUser ~ error:", error);
+      throw error;
+    }
   };
 
   return useMutation({

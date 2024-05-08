@@ -28,16 +28,14 @@ export default function Signup({ navigation }) {
 
     const { confirmPassword, ...formValues } = data;
     createUserMutation.mutate(formValues, {
-      onSuccess: (data) => console.log("🚀 ~ onSubmit ~ data:", data),
+      // onSuccess: (data) => console.log("🚀 ~ onSubmit ~ data:", data),
       onError: (error) => {
-        console.log("🚀 ~ onSubmit ~ error:", error);
-
         if (error instanceof AppwriteException) {
           if (error.type === "user_already_exists") {
             formMethods.setError("email", { message: "User already exists" });
           }
         } else {
-          setServerError("Something went wrong");
+          setServerError("An unknown error occurred");
         }
       },
     });

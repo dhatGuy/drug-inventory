@@ -13,17 +13,14 @@ import { Label } from "~/components/ui/label";
 import { H1, P } from "~/components/ui/typography";
 import { useLoginUser } from "~/hooks/auth";
 import { LoginSchema } from "~/lib/validation";
-import { useUser, useUserActions } from "~/store/authStore";
+import { useUserActions } from "~/store/authStore";
 
 export default function Login({ navigation }) {
   const formMethods = useForm<LoginSchema>({
     resolver: zodResolver(LoginSchema),
   });
   const loginUserMutation = useLoginUser();
-  const { setUser, hydrate } = useUserActions();
-  const userState = useUser();
-
-  console.log("🚀 ~ file: login.tsx:Login ~ userState:", userState);
+  const { hydrate } = useUserActions();
 
   const [serverError, setServerError] = useState("");
 
@@ -31,19 +28,18 @@ export default function Login({ navigation }) {
     setServerError("");
 
     loginUserMutation.mutate(data, {
-      onSuccess: (data) => {
-        setUser(data);
-      },
       onError: (error) => {
-        console.log("🚀 ~ onSubmit ~ error:", error);
         if (error instanceof AppwriteException) {
+          console.log("🚀 ~ onSubmit ~ error:", error.type);
           if (error.type === "user_invalid_credentials") {
             setServerError("Invalid credentials");
           } else if (error.type === "user_session_already_exists") {
             hydrate();
+          } else {
+            setServerError("An unknown error occurred");
           }
         } else {
-          setServerError("Something went wrong");
+          setServerError("An unknown error occurred");
         }
       },
     });
