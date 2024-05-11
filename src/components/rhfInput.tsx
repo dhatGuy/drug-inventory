@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Controller, RegisterOptions, useFormContext } from "react-hook-form";
 import { TextInputProps, View } from "react-native";
 
@@ -10,10 +10,11 @@ import { P } from "./ui/typography";
 import { cn } from "~/lib/utils";
 
 type InputProps = TextInputProps & {
-  placeholder: string;
+  placeholder?: string;
   name: string;
   rules?: RegisterOptions;
   isPassword?: boolean;
+  IconRight?: ReactNode;
 };
 
 const RHFInput = ({ name, placeholder, rules, className, ...props }: InputProps) => {
@@ -60,15 +61,19 @@ const RHFInput = ({ name, placeholder, rules, className, ...props }: InputProps)
               </Button>
             </View>
           ) : (
-            <Input
-              {...props}
-              placeholder={placeholder}
-              autoCapitalize="none"
-              className={cn(isError && "border-red-500", className)}
-              onBlur={onBlur}
-              onChangeText={(value) => onChange(value)}
-              value={value}
-            />
+            <View className="relative">
+              <Input
+                {...props}
+                placeholder={placeholder}
+                className={cn(isError && "border-red-500", className)}
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+              />
+              <View className="absolute inset-y-0 right-2 h-full flex-row items-center">
+                {props.IconRight}
+              </View>
+            </View>
           );
         }}
         name={name}

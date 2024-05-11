@@ -1,9 +1,9 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
-    "eslint:recommended",
+    // "eslint:recommended",
     "universe/native",
-    "universe/shared/typescript-analysis",
+    // "universe/shared/typescript-analysis",
     "plugin:tailwindcss/recommended",
     "prettier",
   ],
@@ -17,14 +17,14 @@ module.exports = {
     // I suggest this setting for requiring return types on functions only where useful
     "@typescript-eslint/explicit-function-return-type": "off",
   },
-  overrides: [
-    {
-      files: ["*.ts", "*.tsx", "*.d.ts"],
-      parserOptions: {
-        tsconfigRootDir: __dirname,
-        project: "./tsconfig.json",
-        sourceType: "module",
-      },
-    },
-  ],
+  // overrides: [
+  //   {
+  //     files: ["*.ts", "*.tsx", "*.d.ts"],
+  //     parserOptions: {
+  //       tsconfigRootDir: __dirname,
+  //       project: "./tsconfig.json",
+  //       sourceType: "module",
+  //     },
+  //   },
+  // ],
 };

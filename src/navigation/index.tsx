@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
-import { ActivityIndicator, Linking } from "react-native";
+import { ActivityIndicator, Linking, View } from "react-native";
 
 import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
@@ -65,7 +65,11 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
   }, [isReady]);
 
   if (!isReady) {
-    return <ActivityIndicator />;
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   return (

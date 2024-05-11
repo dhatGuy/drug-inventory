@@ -1,10 +1,19 @@
-import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "~/global.css";
 
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Toast, {
+  BaseToast,
+  BaseToastProps,
+  ErrorToast,
+  InfoToast,
+  SuccessToast,
+  ToastConfig,
+} from "react-native-toast-message";
 
 import ErrorBoundary from "~/components/error-boundary";
 import { PortalHost } from "~/components/primitives/portal";
@@ -26,6 +35,38 @@ const DARK_THEME: Theme = {
 };
 
 const queryClient = new QueryClient();
+
+const toastConfig: ToastConfig = {
+  success: (props: BaseToastProps) => (
+    <SuccessToast
+      {...props}
+      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text2Style={{ fontFamily: "Poppins_500Medium" }}
+    />
+  ),
+  error: (props: BaseToastProps) => (
+    <ErrorToast
+      {...props}
+      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text2Style={{ fontFamily: "Poppins_500Medium" }}
+    />
+  ),
+  info: (props: BaseToastProps) => (
+    <InfoToast
+      {...props}
+      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text2Style={{ fontFamily: "Poppins_500Medium" }}
+    />
+  ),
+  base: (props: BaseToastProps) => (
+    <BaseToast
+      {...props}
+      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text2Style={{ fontFamily: "Poppins_500Medium" }}
+    />
+  ),
+};
+
 export default function App() {
   const { loaded, error } = useLoadResources();
   const authStatus = useAuthStatus();
@@ -37,13 +78,18 @@ export default function App() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <RootStack isLoaded={loaded} />
-        </QueryClientProvider>
-      </ErrorBoundary>
-      <PortalHost />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+        <ErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <SafeAreaView className="flex-1">
+              <RootStack isLoaded={loaded} />
+              <Toast config={toastConfig} />
+            </SafeAreaView>
+          </QueryClientProvider>
+        </ErrorBoundary>
+        <PortalHost />
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }

@@ -15,10 +15,10 @@ export default function Home() {
   const user = useUser();
 
   return (
-    <StyledSafeAreaView className="p-1">
+    <StyledSafeAreaView className="px-4 py-0">
       <View className="flex-row items-center justify-between">
-        <Text>
-          Hello <Text>{user?.name}</Text>
+        <Text className="text-2xl">
+          Hello <Text className="text-3xl">{user?.name}</Text>
         </Text>
 
         <View className="flex-row items-center justify-end">

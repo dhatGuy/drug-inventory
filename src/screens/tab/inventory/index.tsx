@@ -1,5 +1,5 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera/next";
+import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera";
 import { cssInterop } from "nativewind";
 import { useState } from "react";
 import { Alert, FlatList, View } from "react-native";
@@ -89,7 +89,7 @@ export default function Inventory({ navigation }) {
         <CameraView
           facing="back"
           barcodeScannerSettings={{
-            barcodeTypes: ["qr", "code128"],
+            barcodeTypes: ["qr", "code128", "ean13"],
           }}
           onBarcodeScanned={showScanner ? onBarcodeScanned : undefined}
           style={{

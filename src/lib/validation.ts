@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 import { z } from "zod";
 
 export const SignupSchema = z
@@ -31,3 +32,44 @@ export const LoginSchema = z.object({
 });
 
 export type LoginSchema = z.infer<typeof LoginSchema>;
+
+export const NewItemSchema = z.object({
+  itemName: z
+    .string({ required_error: "Name is required" })
+    .min(4, { message: "Name is too short" })
+    .max(50, { message: "Name is too long" }),
+  nafdacNumber: z
+    .string({ required_error: "NAFDAC Number is required" })
+    .min(4, { message: "NAFDAC Number is too short" })
+    .max(50, { message: "NAFDAC Number is too long" }),
+  image: z
+    .object(
+      {
+        uri: z.string(),
+        name: z.string(),
+        type: z.string(),
+        size: z.number(),
+      },
+      { required_error: "Image is required", invalid_type_error: "Invalid image" }
+    )
+    // not more than 5MB
+    .refine((data) => data.size <= 5 * 1024 * 1024, {
+      message: "Image must be less than 5MB",
+    }),
+  minStockLevel: z.coerce
+    .number({
+      required_error: "Required",
+      invalid_type_error: "Must be a number",
+    })
+    .positive("Must be a positive number"),
+  price: z.coerce
+    .number({ required_error: "Price is required", invalid_type_error: "Must be a number" })
+    .positive("Must be a positive number"),
+  quantity: z.coerce.number({ required_error: "Required" }).positive("Must be a positive number"),
+  expDate: z.coerce
+    .date({ required_error: "Required" })
+    .min(new Date(), { message: "Date is in the past" }),
+  manufactureDate: z.coerce.date({ required_error: "Required" }),
+});
+
+export type NewItemSchema = z.infer<typeof NewItemSchema>;
