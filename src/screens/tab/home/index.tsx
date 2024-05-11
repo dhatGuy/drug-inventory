@@ -7,12 +7,14 @@ import { BarGroup, CartesianChart } from "victory-native";
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Text } from "~/components/ui";
 import { H3, H4 } from "~/components/ui/typography";
+import { useGetProducts } from "~/hooks/product";
 import { useUser, useUserActions } from "~/store/authStore";
 
-export default function Home() {
+export default function Home({ navigation }) {
   const font = useFont(poppins, 12);
   const { signOut } = useUserActions();
   const user = useUser();
+  const { data: items } = useGetProducts();
 
   return (
     <StyledSafeAreaView className="px-4 py-0">
@@ -94,12 +96,19 @@ export default function Home() {
         <View>
           <View className="flex-row items-center justify-between">
             <H3>Items</H3>
-            <Button className="!px-0" variant="link">
+            <Button
+              className="!px-0"
+              variant="link"
+              onPress={() =>
+                navigation.navigate("TabNavigator", {
+                  screen: "InventoryTab",
+                })
+              }>
               <Text>View All</Text>
             </Button>
           </View>
           <View className="gap-3">
-            {items.map((item, index) => {
+            {items?.documents.map((item, index) => {
               return <InventoryItem item={item} key={index} />;
             })}
           </View>
@@ -136,34 +145,3 @@ const DATA = Array.from({ length: 5 }, (_, i) => ({
   sales: 40 + 30 * Math.random(),
   purchase: 40 + 30 * Math.random(),
 }));
-
-const items = [
-  {
-    icon: "clock",
-    label: "Aspirin",
-    exp: "10-01-2023",
-    color: "#d9edf7",
-    unitLeft: 32,
-  },
-  {
-    icon: "thermometer",
-    label: "Ibuprofen",
-    exp: "05-03-2024",
-    color: "#f0f9fa",
-    unitLeft: 80,
-  },
-  {
-    icon: "droplet",
-    label: "Saline Solution",
-    exp: "15-06-2024",
-    color: "#d0e3f0",
-    unitLeft: 45,
-  },
-  {
-    icon: "alert-triangle",
-    label: "Penicillin (Caution)",
-    exp: "28-02-2024",
-    color: "#ffe3e3",
-    unitLeft: 12,
-  },
-];

@@ -1,12 +1,13 @@
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera";
 import { cssInterop } from "nativewind";
 import { useState } from "react";
-import { Alert, FlatList, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, View } from "react-native";
 
 import { InventoryItem, StyledSafeAreaView } from "~/components";
-import { Button, Input } from "~/components/ui";
-import { H2 } from "~/components/ui/typography";
+import { Button, Input, Text } from "~/components/ui";
+import { H2, H4 } from "~/components/ui/typography";
+import { useGetProducts } from "~/hooks/product";
 import { useBackHandler } from "~/hooks/useBackHandler";
 
 cssInterop(CameraView, {
@@ -16,6 +17,7 @@ export default function Inventory({ navigation }) {
   const [showScanner, setShowScanner] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [permission, requestPermission] = useCameraPermissions();
+  const { data, isPending, isError } = useGetProducts();
 
   useBackHandler(() => {
     if (showScanner) {
@@ -44,6 +46,22 @@ export default function Inventory({ navigation }) {
     setSearchText(data);
     setShowScanner(false);
   };
+
+  if (isPending) {
+    return (
+      <StyledSafeAreaView className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" />
+      </StyledSafeAreaView>
+    );
+  }
+
+  if (isError) {
+    return (
+      <StyledSafeAreaView className="flex-1 items-center justify-center">
+        <H2>Error</H2>
+      </StyledSafeAreaView>
+    );
+  }
 
   return (
     <StyledSafeAreaView>
@@ -78,12 +96,22 @@ export default function Inventory({ navigation }) {
         </Button>
       </View>
 
-      <FlatList
-        data={items}
-        contentContainerClassName="gap-4 py-8"
-        renderItem={({ item }) => <InventoryItem item={item} />}
-        keyExtractor={(item) => item.label}
-      />
+      {!data?.documents.length ? (
+        <View className="flex-1 items-center justify-center">
+          <MaterialIcons color="#94A3B8" name="inventory-2" size={36} />
+
+          <H4>No products</H4>
+
+          <Text>Click the + button to add new item</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={data?.documents}
+          contentContainerClassName="gap-4 py-8"
+          renderItem={({ item }) => <InventoryItem item={item} />}
+          keyExtractor={(item) => item.$id}
+        />
+      )}
 
       {showScanner && (
         <CameraView
@@ -98,7 +126,7 @@ export default function Inventory({ navigation }) {
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 5,
+            zIndex: 11,
           }}
         />
       )}

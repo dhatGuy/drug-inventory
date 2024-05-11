@@ -1,13 +1,19 @@
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Inventory from "~/screens/tab/inventory";
-import NewItem from "~/screens/tab/inventory/NewItem";
+import { InventoryStackParamList } from ".";
 
-const Stack = createStackNavigator();
+import Inventory from "~/screens/tab/inventory";
+import ItemDetails from "~/screens/tab/inventory/ItemDetails";
+import NewItem from "~/screens/tab/inventory/NewItem";
+import UpdateItem from "~/screens/tab/inventory/UpdateItem";
+
+const Stack = createStackNavigator<InventoryStackParamList>();
 export default function InventoryStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Inventory" component={Inventory} />
+      <Stack.Screen name="ItemDetails" component={ItemDetails} />
+      <Stack.Screen name="UpdateItem" component={UpdateItem} />
       <Stack.Screen
         name="NewItem"
         component={NewItem}

@@ -11,9 +11,8 @@ import TabNavigator from "./tab-navigator";
 import { useUser } from "~/store/authStore";
 
 export type RootStackParamList = {
-  TabNavigator: undefined;
-  AuthStack: undefined;
-  Modal: undefined;
+  TabNavigator: TabNavigatorParamList;
+  AuthStack: AuthStackParamList;
 };
 
 export type AuthStackParamList = {
@@ -23,7 +22,18 @@ export type AuthStackParamList = {
 
 export type TabNavigatorParamList = {
   Home: undefined;
-  InventoryTab: undefined;
+  InventoryTab: InventoryStackParamList;
+};
+
+export type InventoryStackParamList = {
+  ItemDetails: {
+    id: string;
+  };
+  UpdateItem: {
+    id: string;
+  };
+  NewItem: undefined;
+  Inventory: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
