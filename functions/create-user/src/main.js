@@ -9,9 +9,9 @@ export default async ({ req, res, log, error }) => {
   const db = new Databases(client);
 
   if (req.method === "POST") {
-    const data = req.body;
-    const event = req.headers["x-appwrite-event"];
-    const userId = data.$id;
+    const { body, headers } = req;
+    const event = headers["x-appwrite-event"];
+    const userId = body.$id;
 
     const evtArr = event.split(".");
     try {
@@ -19,13 +19,16 @@ export default async ({ req, res, log, error }) => {
         case "create":
           await db.createDocument("drug-inventory", "user", userId, {
             userId,
-            name: data.name,
-            email: data.email,
+            name: body.name,
+            email: body.email,
           });
           break;
 
         case "update":
-          await db.updateDocument("drug-inventory", "user", userId);
+          await db.updateDocument("drug-inventory", "user", userId, {
+            name: body.name,
+            email: body.email,
+          });
           break;
 
         case "delete":
