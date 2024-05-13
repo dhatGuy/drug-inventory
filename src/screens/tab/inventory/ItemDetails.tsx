@@ -1,8 +1,11 @@
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Image, ScrollView, View } from "react-native";
+import { ActivityIndicator, Image, View } from "react-native";
+import { MaterialTabBar, Tabs } from "react-native-collapsible-tab-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { StyledSafeAreaView } from "~/components";
+import UpdateQuantity from "~/components/UpdateQuantity";
 import { Button, Text } from "~/components/ui";
 import {
   AlertDialog,
@@ -13,21 +16,37 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Badge } from "~/components/ui/badge";
 import { Card } from "~/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { Separator } from "~/components/ui/separator";
 import { TextClassContext } from "~/components/ui/text";
 import { H3 } from "~/components/ui/typography";
 import { useDeleteProduct, useGetProduct } from "~/hooks/product";
-import { cn } from "~/lib/utils";
 
 const ItemDetails = ({ route, navigation }) => {
   const { id } = route.params;
-  const { data, isPending, isError } = useGetProduct(id);
+  const { data, isPending, isError, error } = useGetProduct(id);
   const deleteMutation = useDeleteProduct(id);
   const [value, setValue] = React.useState("account");
+  const [open, setOpen] = React.useState(false);
+  const [openQty, setOpenQty] = React.useState(false);
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const insets = useSafeAreaInsets();
+
+  const contentInsets = {
+    top: insets.top + 10,
+    bottom: insets.bottom + 10,
+    left: 12,
+    right: 12,
+  };
 
   if (isPending) {
     return (
@@ -57,8 +76,8 @@ const ItemDetails = ({ route, navigation }) => {
   };
 
   return (
-    <StyledSafeAreaView className="gap-4">
-      <View className="mb-3 flex-row items-center justify-between">
+    <StyledSafeAreaView className="!p-0">
+      <View className="flex-row items-center justify-between px-2">
         <View className="flex-row items-center gap-1">
           <Button
             variant="ghost"
@@ -72,70 +91,87 @@ const ItemDetails = ({ route, navigation }) => {
         </View>
 
         <View className="flex-row items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex-row items-center gap-1 p-1"
-            onPress={() => navigation.navigate("UpdateItem", { id })}>
-            <Feather name="edit" size={20} />
-          </Button>
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="flex-row items-center gap-1 p-1">
-                <Feather name="trash-2" size={20} />
+          <DropdownMenu open={open} onOpenChange={setOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MaterialCommunityIcons name="dots-vertical" size={20} />
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete this item.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  <Text>Cancel</Text>
-                </AlertDialogCancel>
-                <AlertDialogAction disabled={deleteMutation.isPending} onPress={onDelete}>
-                  {deleteMutation.isPending ? <ActivityIndicator /> : null}
-                  <Text>{deleteMutation.isPending ? "Deleting..." : "Continue"}</Text>
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent insets={contentInsets} className="w-56">
+              <DropdownMenuItem onPress={() => navigation.navigate("UpdateItem", { id })}>
+                <Feather name="edit" size={16} />
+                <Text>Update Item</Text>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Feather name="star" size={16} />
+                <Text>Reviews</Text>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Feather name="bell" size={16} />
+                <Text>Notifications</Text>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onPress={() => setOpenDelete(true)}>
+                <Feather name="trash-2" size={16} />
+                <Text className="!text-lg">Delete Item</Text>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="gap-4">
-        <View className="flex-row gap-4 bg-white p-2 shadow-lg">
-          <Image source={{ uri: data.imageUrl }} style={{ height: 80, width: 80 }} />
+      <Separator className="mb-4" />
 
-          <View className="flex-1">
-            <H3 className="">{data.name}</H3>
-            <Text className="text-[#7f7f7f]">{data.quantity} units left</Text>
+      <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this item.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              <Text>Cancel</Text>
+            </AlertDialogCancel>
+            <AlertDialogAction disabled={deleteMutation.isPending} onPress={onDelete}>
+              {deleteMutation.isPending ? <ActivityIndicator /> : null}
+              <Text>{deleteMutation.isPending ? "Deleting..." : "Continue"}</Text>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-            <Badge className="self-start py-2">
-              <Text className="text-white">In Stock</Text>
-            </Badge>
+      <Tabs.Container
+        renderTabBar={(props) => (
+          <MaterialTabBar
+            {...props}
+            scrollEnabled
+            labelStyle={{
+              fontFamily: "Poppins_700Bold",
+            }}
+          />
+        )}
+        renderHeader={() => (
+          <View className="px-2 pb-2">
+            <View className="flex-row gap-4 bg-white p-2 shadow-lg">
+              <Image source={{ uri: data.imageUrl }} style={{ height: 80, width: 80 }} />
+
+              <View className="flex-1">
+                <H3 className="">{data.name}</H3>
+                <Text className="text-[#7f7f7f]">{data.quantity} units left</Text>
+
+                <Badge className="self-start py-2">
+                  <Text className="text-white">In Stock</Text>
+                </Badge>
+              </View>
+            </View>
+
+            <UpdateQuantity open={openQty} setOpen={setOpenQty} item={data} />
           </View>
-        </View>
-
-        <Button className="flex-row">
-          <Text>Update Stock (quantity)</Text>
-          <Feather style={{ position: "absolute", right: 10 }} name="plus" color="#fff" size={20} />
-        </Button>
-
-        <Tabs value={value} onValueChange={setValue} className="mx-auto w-full flex-col gap-1.5">
-          <TabsList className={cn("w-full flex-row h-14")}>
-            <TabsTrigger value="account" className="h-full flex-1 rounded-lg">
-              <Text>Overview</Text>
-            </TabsTrigger>
-            <TabsTrigger value="password" className="h-full flex-1 rounded-lg">
-              <Text>Stock History</Text>
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="account" className="gap-4">
+        )}>
+        <Tabs.Tab name="Overview">
+          <Tabs.ScrollView contentContainerClassName="gap-4 mt-4 px-4">
             <TextClassContext.Provider value="text-lg">
               <Card className="p-3">
                 <Text className="text-gray-600">
@@ -156,12 +192,39 @@ const ItemDetails = ({ route, navigation }) => {
               </Card>
               <View />
             </TextClassContext.Provider>
-          </TabsContent>
-          <TabsContent value="password">
-            <Card />
-          </TabsContent>
-        </Tabs>
-      </ScrollView>
+          </Tabs.ScrollView>
+        </Tabs.Tab>
+        <Tabs.Tab name="Stock History">
+          <Tabs.FlatList
+            data={data.stockHistory}
+            ItemSeparatorComponent={() => <Separator />}
+            contentContainerClassName="gap-4 mt-4 px-4"
+            renderItem={({ item }) => (
+              <View className="flex-row items-center justify-between">
+                <Text className="font-PoppinsSemiBold">
+                  {new Date(item.$createdAt).toLocaleDateString("en-GB", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </Text>
+                <View className="items-end">
+                  <Text className="font-PoppinsSemiBold text-lg text-gray-600">
+                    <MaterialCommunityIcons
+                      name={item.quantity > 0 ? "arrow-up" : "arrow-down"}
+                      size={16}
+                    />
+                    {item.quantity}
+                  </Text>
+                  <Text className="text-gray-600">Closing Stock: {item.closingStock}</Text>
+                </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.$id}
+            showsVerticalScrollIndicator={false}
+          />
+        </Tabs.Tab>
+      </Tabs.Container>
     </StyledSafeAreaView>
   );
 };

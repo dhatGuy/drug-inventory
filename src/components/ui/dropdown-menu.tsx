@@ -1,7 +1,8 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as React from "react";
 import { Platform, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
-import { Check, ChevronDown, ChevronRight, ChevronUp } from "~/components/Icons";
+// import { Check, ChevronDown, ChevronRight, ChevronUp } from "~/components/Icons";
 import * as DropdownMenuPrimitive from "~/components/primitives/dropdown-menu";
 import { TextClassContext } from "~/components/ui/text";
 import { cn } from "~/lib/utils";
@@ -25,7 +26,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   }
 >(({ className, inset, children, ...props }, ref) => {
   const { open } = DropdownMenuPrimitive.useSubContext();
-  const Icon = Platform.OS === "web" ? ChevronRight : open ? ChevronUp : ChevronDown;
+  // const Icon = Platform.OS === "web" ? ChevronRight : open ? ChevronUp : ChevronDown;
   return (
     <TextClassContext.Provider
       value={cn(
@@ -43,7 +44,13 @@ const DropdownMenuSubTrigger = React.forwardRef<
         )}
         {...props}>
         <>{children}</>
-        <Icon size={18} className="ml-auto text-foreground" />
+        {Platform.OS !== "web" ? (
+          <MaterialCommunityIcons name="chevron-down" size={18} />
+        ) : open ? (
+          <MaterialCommunityIcons name="chevron-up" size={18} />
+        ) : (
+          <MaterialCommunityIcons name="chevron-down" size={18} />
+        )}
       </DropdownMenuPrimitive.SubTrigger>
     </TextClassContext.Provider>
   );
@@ -155,7 +162,12 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     {...props}>
     <View className="absolute left-2 flex size-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Check size={14} strokeWidth={3} className="text-foreground" />
+        <MaterialCommunityIcons
+          name="check"
+          size={14}
+          strokeWidth={3}
+          className="text-foreground"
+        />
       </DropdownMenuPrimitive.ItemIndicator>
     </View>
     <>{children}</>

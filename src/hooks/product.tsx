@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ID } from "react-native-appwrite/src";
+import { ID, Query } from "react-native-appwrite/src";
 import Toast from "react-native-toast-message";
 
 import { documentListSchema } from "~/entities/appwriteSchema";
@@ -20,6 +20,14 @@ export const useCreateProduct = () => {
       quantity: data.quantity,
       expiryDate: data.expDate.toISOString(),
       manufactureDate: data.manufactureDate.toISOString(),
+      ...(data.quantity > 0 && {
+        stockHistory: [
+          {
+            quantity: data.quantity,
+            closingStock: 0,
+          },
+        ],
+      }),
     });
 
     return response;
@@ -47,7 +55,9 @@ export const useCreateProduct = () => {
 
 export const useGetProducts = (searchFilter?: string) => {
   const getProducts = async () => {
-    const response = await databases.listDocuments("drug-inventory", "products");
+    const response = await databases.listDocuments("drug-inventory", "products", [
+      Query.orderDesc("$createdAt"),
+    ]);
     const result = documentListSchema(ProductSchema).parse(response);
     return result;
   };
@@ -71,6 +81,15 @@ export const useGetProduct = (id: string) => {
     queryFn: getProduct,
     initialData: () => {
       return queryClient.getQueryData(["product", id]) as ProductSchema;
+    },
+    select(data) {
+      // order the stock history in descending order
+      return {
+        ...data,
+        stockHistory: data.stockHistory.sort(
+          (a, b) => new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime()
+        ),
+      };
     },
   });
 };

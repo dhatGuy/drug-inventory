@@ -40,28 +40,31 @@ const toastConfig: ToastConfig = {
   success: (props: BaseToastProps) => (
     <SuccessToast
       {...props}
-      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text1Style={{ fontFamily: "Poppins_700Bold" }}
       text2Style={{ fontFamily: "Poppins_500Medium" }}
     />
   ),
   error: (props: BaseToastProps) => (
     <ErrorToast
       {...props}
-      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      style={{
+        zIndex: 100,
+      }}
+      text1Style={{ fontFamily: "Poppins_700Bold" }}
       text2Style={{ fontFamily: "Poppins_500Medium" }}
     />
   ),
   info: (props: BaseToastProps) => (
     <InfoToast
       {...props}
-      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text1Style={{ fontFamily: "Poppins_700Bold" }}
       text2Style={{ fontFamily: "Poppins_500Medium" }}
     />
   ),
   base: (props: BaseToastProps) => (
     <BaseToast
       {...props}
-      text1Style={{ fontFamily: "Poppins_500Medium" }}
+      text1Style={{ fontFamily: "Poppins_700Bold" }}
       text2Style={{ fontFamily: "Poppins_500Medium" }}
     />
   ),
@@ -84,11 +87,11 @@ export default function App() {
           <QueryClientProvider client={queryClient}>
             <SafeAreaView className="flex-1">
               <RootStack isLoaded={loaded} />
-              <Toast config={toastConfig} />
             </SafeAreaView>
           </QueryClientProvider>
         </ErrorBoundary>
         <PortalHost />
+        <Toast config={toastConfig} />
       </GestureHandlerRootView>
     </ThemeProvider>
   );
