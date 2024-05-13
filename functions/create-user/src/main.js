@@ -8,21 +8,38 @@ export default async ({ req, res, log, error }) => {
 
   const db = new Databases(client);
 
-  // when a new user is created
   if (req.method === "POST") {
     const data = req.body;
+    const event = req.headers["x-appwrite-event"];
+    const userId = req.body;
 
-    log(JSON.stringify(data));
-    // log the event headers
-    log(JSON.stringify(req.headers));
-    // const user = await db.createDocument("drug-inventory", "user", ID.unique(), data);
-    // return res.json(user);
+    const evtArr = event.split(".");
+    try {
+      switch (evtArr.at(-1)) {
+        case "create":
+          await db.createDocument("drug-inventory", "user", userId, {
+            userId,
+            name: data.name,
+            email: data.email,
+          });
+          break;
+
+        case "update":
+          await db.updateDocument("drug-inventory", "user", userId);
+          break;
+
+        case "delete":
+          await db.deleteDocument("drug-inventory", "user", userId);
+          break;
+        default:
+          log("Unknown event type");
+          break;
+      }
+
+      return res.json({ success: true });
+    } catch (error) {
+      error(error);
+      return res.empty();
+    }
   }
-
-  return res.json({
-    motto: "Build like a team of hundreds_",
-    learn: "https://appwrite.io/docs",
-    connect: "https://appwrite.io/discord",
-    getInspired: "https://builtwith.appwrite.io",
-  });
 };
