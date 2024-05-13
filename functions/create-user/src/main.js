@@ -11,7 +11,7 @@ export default async ({ req, res, log, error }) => {
   if (req.method === "POST") {
     const data = req.body;
     const event = req.headers["x-appwrite-event"];
-    const userId = req.body;
+    const userId = data.$id;
 
     const evtArr = event.split(".");
     try {
@@ -37,8 +37,8 @@ export default async ({ req, res, log, error }) => {
       }
 
       return res.json({ success: true });
-    } catch (error) {
-      error(error);
+    } catch (e) {
+      error(e);
       return res.empty();
     }
   }
