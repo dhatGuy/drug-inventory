@@ -12,7 +12,9 @@ export default async ({ req, res, log, error }) => {
   if (req.method === "POST") {
     const data = req.body;
 
-    log("🚀 ~ data:", data);
+    log(JSON.stringify(data));
+    // log the event headers
+    log(JSON.stringify(req.headers));
     // const user = await db.createDocument("drug-inventory", "user", ID.unique(), data);
     // return res.json(user);
   }
