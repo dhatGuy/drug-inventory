@@ -5,7 +5,6 @@ import { Theme, ThemeProvider } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Toast, {
   BaseToast,
   BaseToastProps,
@@ -22,6 +21,8 @@ import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import RootStack from "~/navigation";
 import { useAuthStatus } from "~/store/authStore";
+
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -85,9 +86,9 @@ export default function App() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <ErrorBoundary>
           <QueryClientProvider client={queryClient}>
-            <SafeAreaView className="flex-1">
+            <BottomSheetModalProvider>
               <RootStack isLoaded={loaded} />
-            </SafeAreaView>
+            </BottomSheetModalProvider>
           </QueryClientProvider>
         </ErrorBoundary>
         <PortalHost />

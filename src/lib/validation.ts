@@ -73,3 +73,16 @@ export const NewItemSchema = z.object({
 });
 
 export type NewItemSchema = z.infer<typeof NewItemSchema>;
+
+export const CreateReviewSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(4, { message: "Title is too short" })
+    .max(50, { message: "Title is too long" }),
+  desc: z
+    .string({ required_error: "Description is required" })
+    .min(4, { message: "Description is too short" })
+    .max(50, { message: "Description is too long" }),
+});
+
+export type CreateReviewSchema = z.infer<typeof CreateReviewSchema>;

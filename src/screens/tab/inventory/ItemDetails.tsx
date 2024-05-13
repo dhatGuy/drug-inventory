@@ -175,14 +175,14 @@ const ItemDetails = ({ route, navigation }) => {
             <TextClassContext.Provider value="text-lg">
               <Card className="p-3">
                 <Text className="text-gray-600">
-                  Minimum stock level: <Text>{data.minStockLevel}</Text>
+                  Minimum stock level: <Text>{data.minStockLevel.toLocaleString()}</Text>
                 </Text>
-                <Text>Quantity in stock: {data.quantity}</Text>
+                <Text>Quantity in stock: {data.quantity.toLocaleString()}</Text>
               </Card>
 
               <Card className="p-3">
-                <Text>Price: &#8358;{data.price}</Text>
-                <Text>Total value: &#8358;{data.price * data.quantity}</Text>
+                <Text>Price: &#8358;{data.price.toLocaleString()}</Text>
+                <Text>Total value: &#8358;{(data.price * data.quantity).toLocaleString()}</Text>
               </Card>
 
               <Card className="p-3">
