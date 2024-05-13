@@ -102,7 +102,7 @@ const ItemDetails = ({ route, navigation }) => {
                 <Feather name="edit" size={16} />
                 <Text>Update Item</Text>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onPress={() => navigation.navigate("Reviews", { id })}>
                 <Feather name="star" size={16} />
                 <Text>Reviews</Text>
               </DropdownMenuItem>
