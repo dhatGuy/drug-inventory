@@ -24,14 +24,6 @@ export default async ({ req, res, log, error }) => {
         product: product.$id,
       });
     }
-
-    // if (product.expiryDate && new Date(product.expiryDate) < new Date()) {
-    //   await db.createDocument("drug-inventory", "notification", ID.unique(), {
-    //     type: "expired-drug",
-    //     isAdmin: false,
-    //     product: product.$id,
-    //   });
-    // }
   };
 
   if (req.method === "POST") {
@@ -39,7 +31,7 @@ export default async ({ req, res, log, error }) => {
     const event = headers["x-appwrite-event"];
     const trigger = headers["x-appwrite-trigger"];
 
-    log(JSON.stringify({ event, trigger, product });
+    log(JSON.stringify({ event, trigger, product }));
 
     if (trigger === "schedule") {
       let offset = 0;
@@ -52,7 +44,13 @@ export default async ({ req, res, log, error }) => {
 
         while (products.total > 0) {
           for (const product of products.documents) {
-            await runAction(product);
+            if (product.expiryDate && new Date(product.expiryDate) < new Date()) {
+              await db.createDocument("drug-inventory", "notification", ID.unique(), {
+                type: "expired-drug",
+                isAdmin: false,
+                product: product.$id,
+              });
+            }
           }
           offset += 50;
           products = await db.listDocuments("drug-inventory", "products", [
