@@ -42,24 +42,24 @@ export default async ({ req, res, log, error }) => {
           Query.offset(offset),
         ]);
 
-        while (products.total > 0) {
-          log(products.total);
-          // for (const product of products.documents) {
-          //   if (new Date(product.expiryDate) < new Date()) {
-          //     await db.createDocument("drug-inventory", "notification", ID.unique(), {
-          //       type: "expired-drug",
-          //       isAdmin: false,
-          //       product: product.$id,
-          //       expiredDate: product.expiryDate,
-          //     });
-          //   }
-          // }
-          // offset += 50;
-          // products = await db.listDocuments("drug-inventory", "products", [
-          //   Query.limit(50),
-          //   Query.offset(offset),
-          // ]);
-        }
+        // while (products.total > 0) {
+        //   log(products.total);
+        // for (const product of products.documents) {
+        //   if (new Date(product.expiryDate) < new Date()) {
+        //     await db.createDocument("drug-inventory", "notification", ID.unique(), {
+        //       type: "expired-drug",
+        //       isAdmin: false,
+        //       product: product.$id,
+        //       expiredDate: product.expiryDate,
+        //     });
+        //   }
+        // }
+        // offset += 50;
+        // products = await db.listDocuments("drug-inventory", "products", [
+        //   Query.limit(50),
+        //   Query.offset(offset),
+        // ]);
+        // }
 
         log("expired products check done");
         return res.json({ success: true });
