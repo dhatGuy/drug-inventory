@@ -1,33 +1,97 @@
-import { Client } from 'node-appwrite';
+import { Client, ID, Query } from "node-appwrite";
 
-// This is your Appwrite function
-// It's executed each time we get a request
 export default async ({ req, res, log, error }) => {
-  // Why not try the Appwrite SDK?
-  //
-  // const client = new Client()
-  //    .setEndpoint('https://cloud.appwrite.io/v1')
-  //    .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-  //    .setKey(process.env.APPWRITE_API_KEY);
+  const client = new Client()
+    .setEndpoint("https://cloud.appwrite.io/v1")
+    .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
+    .setKey(process.env.APPWRITE_API_KEY);
 
-  // You can log messages to the console
-  log('Hello, Logs!');
+  const db = new Client.Databases(client);
 
-  // If something goes wrong, log an error
-  error('Hello, Errors!');
+  const runAction = async (product) => {
+    if (product.quantity === 0) {
+      await db.createDocument("drug-inventory", "notification", ID.unique(), {
+        type: "out-of-stock",
+        isAdmin: true,
+        quantity: product.quantity,
+        product: product.$id,
+      });
+    } else if (product.quantity < product.minStockLevel) {
+      await db.createDocument("drug-inventory", "notification", ID.unique(), {
+        type: "low-stock",
+        isAdmin: true,
+        quantity: product.quantity,
+        product: product.$id,
+      });
+    }
 
-  // The `req` object contains the request data
-  if (req.method === 'GET') {
-    // Send a response with the res object helpers
-    // `res.send()` dispatches a string back to the client
-    return res.send('Hello, World!');
+    // if (product.expiryDate && new Date(product.expiryDate) < new Date()) {
+    //   await db.createDocument("drug-inventory", "notification", ID.unique(), {
+    //     type: "expired-drug",
+    //     isAdmin: false,
+    //     product: product.$id,
+    //   });
+    // }
+  };
+
+  if (req.method === "POST") {
+    const { body: product, headers } = req;
+    const event = headers["x-appwrite-event"];
+    const trigger = headers["x-appwrite-trigger"];
+
+    log(JSON.stringify({ event, trigger, product });
+
+    if (trigger === "schedule") {
+      let offset = 0;
+      try {
+        // get all products and check if they have expired
+        let products = await db.listDocuments("drug-inventory", "products", [
+          Query.limit(50),
+          Query.offset(offset),
+        ]);
+
+        while (products.total > 0) {
+          for (const product of products.documents) {
+            await runAction(product);
+          }
+          offset += 50;
+          products = await db.listDocuments("drug-inventory", "products", [
+            Query.limit(100),
+            Query.offset(offset),
+          ]);
+        }
+
+        log("expired products check done");
+        return res.json({ success: true });
+      } catch (e) {
+        error(e);
+        return res.empty();
+      }
+    }
+
+    const evtArr = event.split(".");
+
+    try {
+      switch (evtArr.at(-1)) {
+        case "create":
+          runAction(product);
+          break;
+
+        case "update":
+          runAction(product);
+          break;
+
+        case "delete":
+          break;
+        default:
+          log("Unknown event type");
+          break;
+      }
+
+      return res.json({ success: true });
+    } catch (e) {
+      error(e);
+      return res.empty();
+    }
   }
-
-  // `res.json()` is a handy helper for sending JSON
-  return res.json({
-    motto: 'Build like a team of hundreds_',
-    learn: 'https://appwrite.io/docs',
-    connect: 'https://appwrite.io/discord',
-    getInspired: 'https://builtwith.appwrite.io',
-  });
 };
