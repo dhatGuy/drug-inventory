@@ -34,30 +34,31 @@ export default async ({ req, res, log, error }) => {
     log(JSON.stringify({ event, trigger, product }));
 
     if (trigger === "schedule") {
-      let offset = 0;
+      const offset = 0;
       try {
         // get all products and check if they have expired
-        let products = await db.listDocuments("drug-inventory", "products", [
+        const products = await db.listDocuments("drug-inventory", "products", [
           Query.limit(50),
           Query.offset(offset),
         ]);
 
         while (products.total > 0) {
-          for (const product of products.documents) {
-            if (new Date(product.expiryDate) < new Date()) {
-              await db.createDocument("drug-inventory", "notification", ID.unique(), {
-                type: "expired-drug",
-                isAdmin: false,
-                product: product.$id,
-                expiredDate: product.expiryDate,
-              });
-            }
-          }
-          offset += 50;
-          products = await db.listDocuments("drug-inventory", "products", [
-            Query.limit(50),
-            Query.offset(offset),
-          ]);
+          log(products.total);
+          // for (const product of products.documents) {
+          //   if (new Date(product.expiryDate) < new Date()) {
+          //     await db.createDocument("drug-inventory", "notification", ID.unique(), {
+          //       type: "expired-drug",
+          //       isAdmin: false,
+          //       product: product.$id,
+          //       expiredDate: product.expiryDate,
+          //     });
+          //   }
+          // }
+          // offset += 50;
+          // products = await db.listDocuments("drug-inventory", "products", [
+          //   Query.limit(50),
+          //   Query.offset(offset),
+          // ]);
         }
 
         log("expired products check done");
