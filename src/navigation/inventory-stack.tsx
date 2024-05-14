@@ -4,6 +4,7 @@ import { InventoryStackParamList } from ".";
 
 import Inventory from "~/screens/tab/inventory";
 import ItemDetails from "~/screens/tab/inventory/ItemDetails";
+import ItemNotifications from "~/screens/tab/inventory/ItemNotifications";
 import NewItem from "~/screens/tab/inventory/NewItem";
 import Reviews from "~/screens/tab/inventory/Reviews";
 import UpdateItem from "~/screens/tab/inventory/UpdateItem";
@@ -16,6 +17,7 @@ export default function InventoryStack() {
       <Stack.Screen name="ItemDetails" component={ItemDetails} />
       <Stack.Screen name="UpdateItem" component={UpdateItem} />
       <Stack.Screen name="Reviews" component={Reviews} />
+      <Stack.Screen name="ItemNotifications" component={ItemNotifications} />
       <Stack.Screen
         name="NewItem"
         component={NewItem}

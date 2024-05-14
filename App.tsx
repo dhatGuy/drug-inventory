@@ -1,10 +1,11 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "~/global.css";
 
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast, {
   BaseToast,
   BaseToastProps,
@@ -21,8 +22,6 @@ import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import RootStack from "~/navigation";
 import { useAuthStatus } from "~/store/authStore";
-
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 SplashScreen.preventAutoHideAsync();
 

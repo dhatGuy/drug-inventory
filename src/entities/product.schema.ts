@@ -12,14 +12,26 @@ const productBaseSchema = z.object({
   quantity: z.number(),
   expiryDate: z.string().default(new Date().toISOString()),
   manufactureDate: z.string().default(new Date().toISOString()),
-  stockHistory: z.array(
-    DocumentSchema.extend(
-      z.object({
-        quantity: z.number(),
-        closingStock: z.number(),
-      }).shape
+  reviews: z
+    .array(
+      DocumentSchema.extend(
+        z.object({
+          title: z.string(),
+          desc: z.string(),
+        }).shape
+      )
     )
-  ),
+    .default([]),
+  stockHistory: z
+    .array(
+      DocumentSchema.extend(
+        z.object({
+          quantity: z.number(),
+          closingStock: z.number(),
+        }).shape
+      )
+    )
+    .default([]),
 });
 
 export const ProductSchema = DocumentSchema.extend(productBaseSchema.shape);

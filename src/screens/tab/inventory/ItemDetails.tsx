@@ -35,7 +35,6 @@ const ItemDetails = ({ route, navigation }) => {
   const { id } = route.params;
   const { data, isPending, isError, error } = useGetProduct(id);
   const deleteMutation = useDeleteProduct(id);
-  const [value, setValue] = React.useState("account");
   const [open, setOpen] = React.useState(false);
   const [openQty, setOpenQty] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
@@ -90,37 +89,35 @@ const ItemDetails = ({ route, navigation }) => {
           <Text className="native:text-lg">Item Details</Text>
         </View>
 
-        <View className="flex-row items-center gap-3">
-          <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MaterialCommunityIcons name="dots-vertical" size={20} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent insets={contentInsets} className="w-56">
-              <DropdownMenuItem onPress={() => navigation.navigate("UpdateItem", { id })}>
-                <Feather name="edit" size={16} />
-                <Text>Update Item</Text>
-              </DropdownMenuItem>
-              <DropdownMenuItem onPress={() => navigation.navigate("Reviews", { id })}>
-                <Feather name="star" size={16} />
-                <Text>Reviews</Text>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Feather name="bell" size={16} />
-                <Text>Notifications</Text>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onPress={() => setOpenDelete(true)}>
-                <Feather name="trash-2" size={16} />
-                <Text className="!text-lg">Delete Item</Text>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </View>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MaterialCommunityIcons name="dots-vertical" size={20} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent insets={contentInsets} className="w-56">
+            <DropdownMenuItem onPress={() => navigation.navigate("UpdateItem", { id })}>
+              <Feather name="edit" size={16} />
+              <Text>Update Item</Text>
+            </DropdownMenuItem>
+            <DropdownMenuItem onPress={() => navigation.navigate("Reviews", { id })}>
+              <Feather name="star" size={16} />
+              <Text>Reviews</Text>
+            </DropdownMenuItem>
+            <DropdownMenuItem onPress={() => navigation.navigate("ItemNotifications", { id })}>
+              <Feather name="bell" size={16} />
+              <Text>Notifications</Text>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onPress={() => setOpenDelete(true)}>
+              <Feather name="trash-2" size={16} />
+              <Text className="!text-lg">Delete Item</Text>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </View>
 
-      <Separator className="mb-4" />
+      <Separator className="" />
 
       <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
         <AlertDialogContent>

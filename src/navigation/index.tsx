@@ -35,7 +35,7 @@ export type InventoryStackParamList = {
   Reviews: {
     id: string;
   };
-  Notifications: {
+  ItemNotifications: {
     id: string;
   };
   NewItem: undefined;
