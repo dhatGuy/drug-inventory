@@ -101,6 +101,7 @@ function UpdateQuantity({
               style={{ minWidth: 70, height: "auto" }}
               placeholderClassName="text-center"
               textAlign="center"
+              selectTextOnFocus
               keyboardType="numeric"
               placeholder="0"
             />
@@ -114,7 +115,7 @@ function UpdateQuantity({
         <DialogFooter>
           <Button
             onPress={onSubmit}
-            disabled={mutation.isPending || qty === 0 || item.quantity + qty <= 0}>
+            disabled={mutation.isPending || qty === 0 || item.quantity + qty < 0}>
             <Text>SAVE</Text>
           </Button>
         </DialogFooter>

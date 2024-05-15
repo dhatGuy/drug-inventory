@@ -3,11 +3,11 @@ import { z } from "zod";
 import { DocumentSchema } from "./appwriteSchema";
 import { ProductSchema } from "./product.schema";
 
-const notificationBaseSchema = z.object({
-  type: z.enum(["low-stock", "low-stock-limit", "expired-drug", "review", "out-of-stock"]),
+export const notificationBaseSchema = z.object({
+  type: z.enum(["low-stock", "expired-drug", "review", "out-of-stock"]),
   isAdmin: z.boolean(),
   quantity: z.number(),
-  expiredDate: z.string().nullable(),
+  expiredDate: z.string().optional().nullable(),
   product: ProductSchema,
 });
 

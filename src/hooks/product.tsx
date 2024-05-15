@@ -9,6 +9,7 @@ import { type NewItemSchema } from "~/lib/validation";
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
+  // const notifiMutation = useCreateNotification();
   const createProduct = async (data: NewItemSchema & { imageId: string; imageUrl: URL }) => {
     const response = await databases.createDocument("drug-inventory", "products", ID.unique(), {
       name: data.itemName,
@@ -30,7 +31,7 @@ export const useCreateProduct = () => {
       }),
     });
 
-    return response;
+    return ProductSchema.parse(response);
   };
 
   return useMutation({
@@ -41,6 +42,23 @@ export const useCreateProduct = () => {
         type: "success",
         text1: "Product created successfully",
       });
+
+      // if (data.quantity < data.minStockLevel) {
+      //   notifiMutation.mutate({
+      //     type: "low-stock",
+      //     isAdmin: true,
+      //     quantity: data.quantity,
+      //     product: data.$id,
+      //   });
+      // } else if (data.quantity === 0) {
+      //   notifiMutation.mutate({
+      //     type: "out-of-stock",
+      //     isAdmin: true,
+      //     quantity: data.quantity,
+      //     product: data.$id,
+      //     expiredDate: new Date().toISOString(),
+      //   });
+      // }
     },
     onError: (error) => {
       console.log("🚀 ~ useCreateProduct ~ error:", error);

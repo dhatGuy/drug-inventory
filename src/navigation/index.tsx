@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
@@ -9,6 +9,7 @@ import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
 
 import { useUser } from "~/store/authStore";
+import { useRouteActions } from "~/store/route.store";
 
 export type RootStackParamList = {
   TabNavigator: TabNavigatorParamList;
@@ -20,9 +21,14 @@ export type AuthStackParamList = {
   Signup: undefined;
 };
 
+export type NotificationStackParamList = {
+  Notification: undefined;
+};
+
 export type TabNavigatorParamList = {
   Home: undefined;
   InventoryTab: InventoryStackParamList;
+  Notification: NotificationStackParamList;
 };
 
 export type InventoryStackParamList = {
@@ -45,11 +51,13 @@ export type InventoryStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const PERSISTENCE_KEY = "NAVIGATION_STATE_V1";
+const ref = createNavigationContainerRef();
 
 export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
   const [isReady, setIsReady] = React.useState(!__DEV__);
   const [initialState, setInitialState] = React.useState();
   const userState = useUser();
+  const { setRouteName } = useRouteActions();
 
   React.useEffect(() => {
     const restoreState = async () => {
@@ -74,6 +82,7 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
     }
 
     if (isLoaded && isReady) {
+      setRouteName(ref.getCurrentRoute()?.name);
       setTimeout(() => {
         SplashScreen.hideAsync();
       }, 100);
@@ -88,10 +97,15 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
     );
   }
 
+  const onStateChange = (state) => {
+    // const previousRouteName = routeName;
+    const currentRouteName = ref.getCurrentRoute()?.name;
+    setRouteName(currentRouteName);
+    __DEV__ && AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state));
+  };
+
   return (
-    <NavigationContainer
-      initialState={initialState}
-      onStateChange={(state) => AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state))}>
+    <NavigationContainer ref={ref} initialState={initialState} onStateChange={onStateChange}>
       <Stack.Navigator>
         {userState ? (
           <Stack.Screen

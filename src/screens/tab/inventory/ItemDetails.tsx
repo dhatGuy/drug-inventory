@@ -30,6 +30,7 @@ import { Separator } from "~/components/ui/separator";
 import { TextClassContext } from "~/components/ui/text";
 import { H3 } from "~/components/ui/typography";
 import { useDeleteProduct, useGetProduct } from "~/hooks/product";
+import { useUser } from "~/store/authStore";
 
 const ItemDetails = ({ route, navigation }) => {
   const { id } = route.params;
@@ -39,6 +40,7 @@ const ItemDetails = ({ route, navigation }) => {
   const [openQty, setOpenQty] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
   const insets = useSafeAreaInsets();
+  const user = useUser();
 
   const contentInsets = {
     top: insets.top + 10,
@@ -96,23 +98,25 @@ const ItemDetails = ({ route, navigation }) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent insets={contentInsets} className="w-56">
-            <DropdownMenuItem onPress={() => navigation.navigate("UpdateItem", { id })}>
-              <Feather name="edit" size={16} />
-              <Text>Update Item</Text>
-            </DropdownMenuItem>
+            {user?.labels.includes("admin") && (
+              <DropdownMenuItem onPress={() => navigation.navigate("UpdateItem", { id })}>
+                <Feather name="edit" size={16} />
+                <Text>Update Item</Text>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onPress={() => navigation.navigate("Reviews", { id })}>
               <Feather name="star" size={16} />
               <Text>Reviews</Text>
             </DropdownMenuItem>
-            <DropdownMenuItem onPress={() => navigation.navigate("ItemNotifications", { id })}>
-              <Feather name="bell" size={16} />
-              <Text>Notifications</Text>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onPress={() => setOpenDelete(true)}>
-              <Feather name="trash-2" size={16} />
-              <Text className="!text-lg">Delete Item</Text>
-            </DropdownMenuItem>
+            {user?.labels.includes("admin") && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onPress={() => setOpenDelete(true)}>
+                  <Feather name="trash-2" size={16} />
+                  <Text className="!text-lg">Delete Item</Text>
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </View>
