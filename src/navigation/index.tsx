@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
@@ -8,6 +7,8 @@ import { ActivityIndicator, Linking, View } from "react-native";
 import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
 
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation/build/useReactNavigationDevTools";
+import { mmkvStorage } from "~/lib/utils";
 import { useUser } from "~/store/authStore";
 import { useRouteActions } from "~/store/route.store";
 
@@ -29,6 +30,11 @@ export type TabNavigatorParamList = {
   Home: undefined;
   InventoryTab: InventoryStackParamList;
   Notification: NotificationStackParamList;
+  MoreTab: MoreStackParamList;
+};
+
+export type MoreStackParamList = {
+  More: undefined;
 };
 
 export type InventoryStackParamList = {
@@ -54,6 +60,7 @@ const PERSISTENCE_KEY = "NAVIGATION_STATE_V1";
 const ref = createNavigationContainerRef();
 
 export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
+  useReactNavigationDevTools(ref);
   const [isReady, setIsReady] = React.useState(!__DEV__);
   const [initialState, setInitialState] = React.useState();
   const userState = useUser();
@@ -65,7 +72,7 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
         const initialUrl = await Linking.getInitialURL();
 
         if (initialUrl == null) {
-          const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY);
+          const savedStateString = mmkvStorage.getString(PERSISTENCE_KEY);
           const state = savedStateString ? JSON.parse(savedStateString) : undefined;
 
           if (state !== undefined) {
@@ -101,7 +108,7 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
     // const previousRouteName = routeName;
     const currentRouteName = ref.getCurrentRoute()?.name;
     setRouteName(currentRouteName);
-    __DEV__ && AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(state));
+    __DEV__ && mmkvStorage.set(PERSISTENCE_KEY, JSON.stringify(state));
   };
 
   return (

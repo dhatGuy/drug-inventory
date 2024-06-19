@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { DocumentSchema } from "./appwriteSchema";
+import { DocumentSchema, documentListSchema } from "./appwriteSchema";
 
 const productBaseSchema = z.object({
   name: z.string(),
@@ -35,6 +35,10 @@ const productBaseSchema = z.object({
 });
 
 export const ProductSchema = DocumentSchema.extend(productBaseSchema.shape);
+
+export const ProductsSchema = documentListSchema(ProductSchema);
+
+export type ProductsSchema = z.infer<typeof ProductsSchema>;
 
 export type ProductSchema = z.infer<typeof ProductSchema>;
 

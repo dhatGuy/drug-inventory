@@ -3,7 +3,7 @@ import { ID, Query } from "react-native-appwrite/src";
 import Toast from "react-native-toast-message";
 
 import { documentListSchema } from "~/entities/appwriteSchema";
-import { ProductSchema, ProductUpdateSchema } from "~/entities/product.schema";
+import { ProductSchema, ProductUpdateSchema, ProductsSchema } from "~/entities/product.schema";
 import { databases, storage } from "~/lib/appWrite";
 import { type NewItemSchema } from "~/lib/validation";
 
@@ -98,7 +98,9 @@ export const useGetProduct = (id: string) => {
     queryKey: ["product", id],
     queryFn: getProduct,
     initialData: () => {
-      return queryClient.getQueryData(["product", id]) as ProductSchema;
+      return queryClient
+        .getQueryData<ProductsSchema>(["products"])
+        ?.documents.find((product) => product.$id === id);
     },
     select(data) {
       // order the stock history in descending order

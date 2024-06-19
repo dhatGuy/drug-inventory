@@ -28,7 +28,7 @@ export default function InventoryItem({ item }: Props) {
   return (
     <Button
       variant="ghost"
-      className="flex-row items-center justify-between gap-3 !px-0"
+      className="flex-row items-center justify-between gap-3 !px-0 active:bg-transparent"
       style={{ height: "auto" }}
       onPress={onPress}>
       <View className={cn("size-[46px] rounded-xl items-center justify-center")}>

@@ -26,7 +26,7 @@
     --radius: 0.5rem;
   }
 
-  .dark:root {
+  /* .dark:root {
     --background: 118 43% 0%;
     --foreground: 118 32% 99%;
     --muted: 118 19% 13%;
@@ -46,5 +46,5 @@
     --destructive: 12 85% 50%;
     --destructive-foreground: 0 0% 100%;
     --ring: 118 73% 58%;
-  }
+  } */
 }

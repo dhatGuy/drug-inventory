@@ -1,10 +1,11 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StackScreenProps } from "@react-navigation/stack";
 import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { RootStackParamList, TabNavigatorParamList } from ".";
 import InventoryStack from "./inventory-stack";
+import MoreStack from "./more-stack";
 
 import Home from "~/screens/tab/home";
 import ItemNotifications from "~/screens/tab/inventory/ItemNotifications";
@@ -13,13 +14,10 @@ import { useRouteName } from "~/store/route.store";
 
 const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof MaterialIcons>["name"];
-  color: string;
-}) {
+function TabBarIcon(props: { name: React.ComponentProps<typeof Feather>["name"]; color: string }) {
   const { styles } = useStyles(stylesheet);
 
-  return <MaterialIcons size={28} style={styles.tabBarIcon} {...props} />;
+  return <Feather size={28} style={styles.tabBarIcon} {...props} />;
 }
 
 type Props = StackScreenProps<RootStackParamList, "TabNavigator">;
@@ -28,7 +26,7 @@ export default function TabLayout({ navigation }: Props) {
   const user = useUser();
   const currentRouteName = useRouteName();
 
-  const hide = !["Home", "Inventory", "Notification"].includes(currentRouteName ?? "");
+  const hide = !["Home", "Inventory", "Notification", "More"].includes(currentRouteName ?? "");
 
   return (
     <Tab.Navigator
@@ -47,7 +45,7 @@ export default function TabLayout({ navigation }: Props) {
         component={Home}
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home-filled" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
       <Tab.Screen
@@ -55,7 +53,7 @@ export default function TabLayout({ navigation }: Props) {
         component={InventoryStack}
         options={{
           title: "Inventory",
-          tabBarIcon: ({ color }) => <TabBarIcon name="inventory-2" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="package" color={color} />,
         }}
       />
       {user?.labels.includes("admin") && (
@@ -64,10 +62,18 @@ export default function TabLayout({ navigation }: Props) {
           component={ItemNotifications}
           options={{
             title: "Notification",
-            tabBarIcon: ({ color }) => <TabBarIcon name="notifications" color={color} />,
+            tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
           }}
         />
       )}
+      <Tab.Screen
+        name="MoreTab"
+        component={MoreStack}
+        options={{
+          title: "Notification",
+          tabBarIcon: ({ color }) => <TabBarIcon name="menu" color={color} />,
+        }}
+      />
     </Tab.Navigator>
   );
 }

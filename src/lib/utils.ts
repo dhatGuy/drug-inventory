@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { FormatDistanceFnOptions, FormatDistanceToken, formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-GB";
+import { MMKV } from "react-native-mmkv";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -61,3 +62,5 @@ export function formattedDate(date: Date, addSuffix = false) {
     },
   });
 }
+
+export const mmkvStorage = new MMKV();

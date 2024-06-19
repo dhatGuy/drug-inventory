@@ -144,7 +144,7 @@ const Reviews = ({ navigation, route }) => {
             renderItem={({ item }) => (
               <View className="flex-row gap-4 px-2">
                 <Avatar
-                  alt="Zach Nugent's Avatar"
+                  alt={item.user.name}
                   className="size-12 items-center justify-center border border-gray-400 bg-green-700">
                   <Text className="text-2xl text-white">{getAvatarName(item.user.name)}</Text>
                 </Avatar>
