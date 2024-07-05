@@ -1,14 +1,16 @@
 import { Feather, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 import { CameraView, PermissionStatus, useCameraPermissions } from "expo-camera";
 import { cssInterop } from "nativewind";
-import { useState } from "react";
-import { ActivityIndicator, Alert, FlatList, View } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Alert, FlatList, Input as RNInput, View } from "react-native";
 
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Input, Text } from "~/components/ui";
 import { H2, H4 } from "~/components/ui/typography";
-import { useGetProducts } from "~/hooks/product";
 import { useBackHandler } from "~/hooks/useBackHandler";
+import useDebounce from "~/hooks/useDebounce";
+import { productsQueryOptions } from "~/lib/queryOptions";
 
 cssInterop(CameraView, {
   className: "style",
@@ -17,8 +19,13 @@ export default function Inventory({ navigation }) {
   const [showScanner, setShowScanner] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [permission, requestPermission] = useCameraPermissions();
-  const { data, isPending, isError } = useGetProducts();
-
+  const searchRef = React.useRef<typeof RNInput>(null);
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const { data, isPending, isError, error, refetch } = useQuery({
+    ...productsQueryOptions(debouncedSearchText),
+    placeholderData: (prev) => prev,
+  });
+  const [focused, setFocused] = useState(false);
   useBackHandler(() => {
     if (showScanner) {
       setShowScanner(false);
@@ -47,18 +54,11 @@ export default function Inventory({ navigation }) {
     setShowScanner(false);
   };
 
-  if (isPending) {
-    return (
-      <StyledSafeAreaView className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" />
-      </StyledSafeAreaView>
-    );
-  }
-
   if (isError) {
     return (
       <StyledSafeAreaView className="flex-1 items-center justify-center">
         <H2>Error</H2>
+        <Button onPress={() => refetch()}>Reload</Button>
       </StyledSafeAreaView>
     );
   }
@@ -78,25 +78,47 @@ export default function Inventory({ navigation }) {
         </View>
 
         <Input
+          ref={searchRef}
           autoCapitalize="words"
           placeholder="Item name, NAFDAC number, etc."
           placeholderTextColor="#778599"
           clearButtonMode="always"
+          inputMode="search"
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           value={searchText}
           onChangeText={setSearchText}
           className="rounded-lg bg-white pl-10 pr-11 shadow-lg shadow-black/5"
         />
 
-        <Button
-          variant="ghost"
-          onPress={onBtnCodePressed}
-          size="icon"
-          className="absolute inset-y-0 right-0 my-auto h-full">
-          <MaterialCommunityIcons name="barcode-scan" size={24} />
-        </Button>
+        {focused ? (
+          <Button
+            variant="ghost"
+            onPress={() => {
+              searchRef.current?.blur();
+              setSearchText("");
+            }}
+            size="icon"
+            className="absolute inset-y-0 right-0 my-auto h-full">
+            <MaterialCommunityIcons name="close" size={24} />
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            onPress={onBtnCodePressed}
+            size="icon"
+            className="absolute inset-y-0 right-0 my-auto h-full">
+            <MaterialCommunityIcons name="barcode-scan" size={24} />
+          </Button>
+        )}
       </View>
+      {isPending && (
+        <View className="mt-4">
+          <ActivityIndicator color="#94A3B8" />
+        </View>
+      )}
 
-      {!data?.documents.length ? (
+      {!data?.documents.length && !debouncedSearchText ? (
         <View className="flex-1 items-center justify-center">
           <MaterialIcons color="#94A3B8" name="inventory-2" size={36} />
 

@@ -75,13 +75,14 @@ export const useGetProducts = (searchFilter?: string) => {
   const getProducts = async () => {
     const response = await databases.listDocuments("drug-inventory", "products", [
       Query.orderDesc("$createdAt"),
+      ...(searchFilter ? [Query.search("name", searchFilter)] : []),
     ]);
     const result = documentListSchema(ProductSchema).parse(response);
     return result;
   };
 
   return useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", searchFilter],
     queryFn: getProducts,
   });
 };

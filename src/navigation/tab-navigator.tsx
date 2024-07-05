@@ -31,6 +31,7 @@ export default function TabLayout({ navigation }: Props) {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: "black",
         headerShown: false,
         tabBarStyle: { display: hide ? "none" : "flex" },

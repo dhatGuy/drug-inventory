@@ -1,15 +1,28 @@
 import { useLinkProps } from "@react-navigation/native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
-import { Text } from "./ui";
+import { To } from "@react-navigation/native/lib/typescript/src/useLinkTo";
+import { Button, Text } from "./ui";
 
-const LinkButton = ({ to, action, children, ...rest }) => {
+type LinkButtonProps = {
+  to: To<ReactNavigation.RootParamList>;
+  action?:
+    | Readonly<{
+        type: string;
+        payload?: object | undefined;
+        source?: string | undefined;
+        target?: string | undefined;
+      }>
+    | undefined;
+  children: React.ReactNode;
+} & React.ComponentProps<typeof Button>;
+
+const LinkButton = ({ to, action, children, ...rest }: LinkButtonProps) => {
   const { onPress, ...props } = useLinkProps({ to, action });
 
   return (
-    <TouchableOpacity onPress={onPress} {...props} {...rest}>
+    <Button onPress={onPress} {...props} {...rest}>
       <Text>{children}</Text>
-    </TouchableOpacity>
+    </Button>
   );
 };
 
