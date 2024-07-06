@@ -1,9 +1,12 @@
 import { z } from "zod";
 
 import { DocumentSchema } from "./appwriteSchema";
+import { ProductSchema } from "./product.schema";
+import { userSchema } from "./user.schema";
 
 export const drugReportBaseSchema = z.object({
-  productId: z.string(),
+  product: ProductSchema,
+  user: userSchema,
   masNumber: z.string(),
   comment: z.string(),
 });

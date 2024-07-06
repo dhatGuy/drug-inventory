@@ -1,22 +1,42 @@
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { StyledSafeAreaView } from "~/components";
-import { Input, Text } from "~/components/ui";
-import { H1, H2, H3 } from "~/components/ui/typography";
+import { Button, Input, Text } from "~/components/ui";
+import { Avatar } from "~/components/ui/avatar";
+import { H4 } from "~/components/ui/typography";
 import { reviewsQueryOptions } from "~/lib/queryOptions";
+import { getAvatarName } from "~/lib/utils";
 
 const Reviews = () => {
   const { data } = useQuery(reviewsQueryOptions);
+  const navigation = useNavigation();
 
   return (
-    <StyledSafeAreaView>
+    <StyledSafeAreaView className="!px-0">
+      <View className="flex-row items-center justify-between px-4">
+        <View className="size-10 items-start justify-center">
+          <Button
+            size="icon"
+            variant="ghost"
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Feather color="#000" name="arrow-left" size={24} />
+          </Button>
+        </View>
+        <H4 numberOfLines={1} className="flex-1 text-center">
+          Drug Reviews
+        </H4>
+        <View />
+      </View>
+
       <FlatList
         data={data?.documents ?? []}
         ListHeaderComponent={() => (
-          <View className="bg-secondary text-primary-foreground py-4 px-6">
-            <H1 className="text-2xl font-bold">Drug Reviews</H1>
+          <View className="bg-secondary text-primary-foreground py-4 mb-2 px-6">
             <View className="relative mt-4">
               <Feather
                 name="search"
@@ -32,21 +52,20 @@ const Reviews = () => {
           </View>
         )}
         renderItem={({ item }) => (
-          <View className="bg-background rounded-lg shadow-md p-4">
-            <View className="flex-row items-center justify-between">
-              <H2 className="text-lg font-bold">{item.product.name}</H2>
-              <Text className="text-sm text-muted-foreground">- {item.user.name}</Text>
+          <View className="flex-row gap-4 px-2">
+            <Avatar
+              alt={item.user.name}
+              className="size-12 items-center justify-center border border-gray-400 bg-green-700">
+              <Text className="text-2xl text-white">{getAvatarName(item.user.name)}</Text>
+            </Avatar>
+            <View className="flex-1">
+              <View className="flex-row items-center justify-between">
+                <Text className="font-PoppinsSemiBold text-lg">{item.title}</Text>
+              </View>
+              <Text className="text-sm text-gray-500">by {item.user.name}</Text>
+              <Text className="text-lg">{item.desc}</Text>
+              <Text className="text-gray-500">{new Date(item.$createdAt).toDateString()}</Text>
             </View>
-            <View className="flex-row items-center gap-2">
-              <Feather name="star" className="w-5 h-5 fill-primary" />
-              <Feather name="star" className="w-5 h-5 fill-primary" />
-              <Feather name="star" className="w-5 h-5 fill-primary" />
-              <Feather name="star" className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <Feather name="star" className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <Text className="text-sm text-muted-foreground">3.2</Text>
-            </View>
-            <H3 className="text-lg font-bold mt-4">{item.title}</H3>
-            <Text className="mt-2 text-muted-foreground">{item.desc}</Text>
           </View>
         )}
       />
