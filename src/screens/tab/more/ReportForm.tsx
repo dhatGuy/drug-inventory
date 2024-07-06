@@ -56,7 +56,7 @@ export default function ReportForm() {
   const { handleSheetPositionChange } = useBottomSheetBackHandler(bottomSheetModalRef);
 
   // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
+  const snapPoints = useMemo(() => ["50%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -72,7 +72,6 @@ export default function ReportForm() {
   });
 
   const onSubmit: SubmitHandler<NewReportSchema> = async (data) => {
-    console.log("🚀 ~ file: Reports.tsx:75 ~ data:", data);
     if (mutation.isPending) return;
     mutation.mutate(data, {
       onSuccess: () => {

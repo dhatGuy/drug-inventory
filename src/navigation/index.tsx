@@ -10,7 +10,7 @@ import TabNavigator from "./tab-navigator";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation/build/useReactNavigationDevTools";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { mmkvStorage } from "~/lib/utils";
-import { useUser } from "~/store/authStore";
+import { useAuthStatus } from "~/store/authStore";
 import { useRouteActions } from "~/store/route.store";
 
 export type RootStackParamList = {
@@ -64,7 +64,7 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
   useReactNavigationDevTools(ref);
   const [isReady, setIsReady] = React.useState(!__DEV__);
   const [initialState, setInitialState] = React.useState();
-  const userState = useUser();
+  const status = useAuthStatus();
   const { setRouteName } = useRouteActions();
 
   React.useEffect(() => {
@@ -116,7 +116,7 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
     <NavigationContainer ref={ref} initialState={initialState} onStateChange={onStateChange}>
       <BottomSheetModalProvider>
         <Stack.Navigator>
-          {userState ? (
+          {status === "authenticated" ? (
             <Stack.Screen
               name="TabNavigator"
               component={TabNavigator}

@@ -9,11 +9,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const getAvatarName = (name: string) => {
-  const words = name.split(" ");
+  if (!name) return "";
+  const words = name?.split(" ");
   if (words.length > 2) {
     words.length = 2;
   }
-  return words.map((word) => word[0]).join("");
+  return words?.map((word) => word[0]).join("");
 };
 
 export function formatDistance(

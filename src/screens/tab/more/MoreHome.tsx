@@ -1,5 +1,6 @@
-import { useNavigation } from "@react-navigation/native";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { StyledSafeAreaView } from "~/components";
 import LinkButton from "~/components/LinkButton";
@@ -7,11 +8,29 @@ import { Button, Text } from "~/components/ui";
 import { Avatar } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { getAvatarName } from "~/lib/utils";
-import { useUser } from "~/store/authStore";
+import { useUser, useUserActions } from "~/store/authStore";
 
 export default function Settings() {
   const user = useUser();
-  const navigation = useNavigation();
+  const { signOut } = useUserActions();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      queryClient.clear();
+    },
+    onError: () => {
+      Toast.show({
+        text1: "Error occurred while signing out",
+        type: "error",
+      });
+    },
+  });
+
+  const handleSignOut = () => {
+    if (!mutation.isPending) mutation.mutate();
+  };
 
   return (
     <StyledSafeAreaView className="!p-0">
@@ -77,11 +96,10 @@ export default function Settings() {
                 <Text className="text-xl text-black">Report Fake Drug</Text>
               </LinkButton>
               <Button
-                onPress={() => {
-                  // handle onPress
-                }}
+                onPress={handleSignOut}
                 variant="secondary"
                 className="flex-row items-center justify-start gap-2 p-3">
+                {mutation.isPending && <ActivityIndicator color="black" />}
                 <Text className="text-xl text-black">Log Out</Text>
               </Button>
             </View>

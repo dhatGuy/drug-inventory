@@ -8,9 +8,9 @@ type AuthState = {
   user: Models.User<Models.Preferences> | null;
   actions: {
     setUser: (user: any) => void;
-    hydrate: () => void;
+    hydrate: () => Promise<void>;
     setStatus: (status: "idle" | "authenticated" | "unauthenticated") => void;
-    signOut: () => void;
+    signOut: () => Promise<void>;
   };
 };
 
