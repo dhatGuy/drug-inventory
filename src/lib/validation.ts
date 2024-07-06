@@ -37,11 +37,13 @@ export const NewItemSchema = z.object({
   itemName: z
     .string({ required_error: "Name is required" })
     .min(4, { message: "Name is too short" })
-    .max(50, { message: "Name is too long" }),
+    .max(50, { message: "Name is too long" })
+    .default(""),
   nafdacNumber: z
     .string({ required_error: "NAFDAC Number is required" })
     .min(4, { message: "NAFDAC Number is too short" })
-    .max(50, { message: "NAFDAC Number is too long" }),
+    .max(50, { message: "NAFDAC Number is too long" })
+    .default(""),
   image: z
     .object(
       {
@@ -61,15 +63,23 @@ export const NewItemSchema = z.object({
       required_error: "Required",
       invalid_type_error: "Must be a number",
     })
-    .positive("Must be a positive number"),
+    .positive("Must be a positive number")
+    .default(0),
   price: z.coerce
     .number({ required_error: "Price is required", invalid_type_error: "Must be a number" })
-    .positive("Must be a positive number"),
-  quantity: z.coerce.number({ required_error: "Required" }).positive("Must be a positive number"),
+    .positive("Must be a positive number")
+    .min(1)
+    .default(0),
+  quantity: z.coerce
+    .number({ required_error: "Required" })
+    .positive("Must be a positive number")
+    .min(1)
+    .default(0),
   expDate: z.coerce
     .date({ required_error: "Required" })
-    .min(new Date(), { message: "Date is in the past" }),
-  manufactureDate: z.coerce.date({ required_error: "Required" }),
+    .min(new Date(), { message: "Date is in the past" })
+    .default(new Date()),
+  manufactureDate: z.coerce.date({ required_error: "Required" }).default(new Date()),
 });
 
 export type NewItemSchema = z.infer<typeof NewItemSchema>;
@@ -86,3 +96,18 @@ export const CreateReviewSchema = z.object({
 });
 
 export type CreateReviewSchema = z.infer<typeof CreateReviewSchema>;
+
+export const NewReportSchema = z.object({
+  product: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+  masNumber: z.string().max(11, {
+    message: "Maximum mas number length is 11 characters",
+  }),
+  comment: z.string().max(200, {
+    message: "Maximum comment length is 200 characters",
+  }),
+});
+
+export type NewReportSchema = z.infer<typeof NewReportSchema>;

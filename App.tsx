@@ -1,6 +1,5 @@
 import "~/global.css";
 
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Theme, ThemeProvider } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider, focusManager } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
@@ -110,9 +109,7 @@ export default function App() {
         <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
         <ErrorBoundary>
           <QueryClientProvider client={queryClient}>
-            <BottomSheetModalProvider>
-              <RootStack isLoaded={loaded} />
-            </BottomSheetModalProvider>
+            <RootStack isLoaded={loaded} />
           </QueryClientProvider>
         </ErrorBoundary>
         <PortalHost />

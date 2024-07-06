@@ -169,7 +169,7 @@ export default function NewItem({ navigation }) {
   };
 
   return (
-    <StyledSafeAreaView className="!p-4">
+    <StyledSafeAreaView className="!px-4">
       <FormProvider {...formMethods}>
         <View className="mb-3 flex-row items-center justify-between">
           <Button
@@ -326,7 +326,7 @@ export default function NewItem({ navigation }) {
             className="flex-row items-center justify-center gap-2"
             disabled={createProductMutation.isPending || imageUploading}>
             {(createProductMutation.isPending || imageUploading) && <ActivityIndicator />}
-            <Text className="uppercase ">Save</Text>
+            <Text className="uppercase">Save</Text>
           </Button>
 
           {/* <View className="mb-4">

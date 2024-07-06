@@ -50,14 +50,12 @@ export default function Settings() {
             </Text>
 
             <View className="mx-3 rounded-md flex gap-6">
-              <Button
-                onPress={() => {
-                  // handle onPress
-                }}
+              <LinkButton
+                to="/Settings"
                 variant="secondary"
                 className="flex-row items-center justify-start gap-2 p-3">
                 <Text className="text-xl text-black">Settings</Text>
-              </Button>
+              </LinkButton>
               <LinkButton
                 variant="secondary"
                 // to={{ screen: "MoreTab", params: { screen: "Reviews" } }}
@@ -66,14 +64,18 @@ export default function Settings() {
                 style={{ flex: 1 }}>
                 <Text className="text-xl text-black">Reviews</Text>
               </LinkButton>
-              <Button
-                onPress={() => {
-                  // handle onPress
-                }}
+              <LinkButton
+                to="/Reports"
                 variant="secondary"
                 className="flex-row items-center justify-start gap-2 p-3">
                 <Text className="text-xl text-black">Reports</Text>
-              </Button>
+              </LinkButton>
+              <LinkButton
+                to="/NewReport"
+                variant="secondary"
+                className="flex-row items-center justify-start gap-2 p-3">
+                <Text className="text-xl text-black">Report Fake Drug</Text>
+              </LinkButton>
               <Button
                 onPress={() => {
                   // handle onPress

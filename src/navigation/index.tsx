@@ -8,6 +8,7 @@ import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
 
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation/build/useReactNavigationDevTools";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { mmkvStorage } from "~/lib/utils";
 import { useUser } from "~/store/authStore";
 import { useRouteActions } from "~/store/route.store";
@@ -113,23 +114,25 @@ export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
 
   return (
     <NavigationContainer ref={ref} initialState={initialState} onStateChange={onStateChange}>
-      <Stack.Navigator>
-        {userState ? (
-          <Stack.Screen
-            name="TabNavigator"
-            component={TabNavigator}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="AuthStack"
-            options={{
-              headerShown: false,
-            }}
-            component={AuthStack}
-          />
-        )}
-      </Stack.Navigator>
+      <BottomSheetModalProvider>
+        <Stack.Navigator>
+          {userState ? (
+            <Stack.Screen
+              name="TabNavigator"
+              component={TabNavigator}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <Stack.Screen
+              name="AuthStack"
+              options={{
+                headerShown: false,
+              }}
+              component={AuthStack}
+            />
+          )}
+        </Stack.Navigator>
+      </BottomSheetModalProvider>
     </NavigationContainer>
   );
 }
