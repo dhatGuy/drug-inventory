@@ -8,38 +8,6 @@ export default async ({ req, res, log, error }) => {
 
   const db = new Databases(client);
 
-  function generateUniqueID() {
-    const timestamp = Date.now().toString().slice(-8);
-    const randomPart = Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, "0");
-    return parseInt(timestamp + randomPart);
-  }
-
-  //generate 50 MAS numbers for the product
-  const generateMAS = async (productId) => {
-    const promises = [];
-    for (let i = 0; i < 50; i++) {
-      const timestamp = Date.now().toString().slice(-8);
-      console.log("🚀 ~ file: main.js:24 ~ generateMAS ~ timestamp:", timestamp);
-      const randomPart = Math.floor(Math.random() * 1000)
-        .toString()
-        .padStart(3, "0");
-      console.log("🚀 ~ file: main.js:28 ~ generateMAS ~ randomPart:", randomPart);
-      const value = timestamp + randomPart;
-      log("🚀 ~ file: main.js:24 ~ generateMAS ~ value:", value);
-      promises.push(
-        db.createDocument("drug-inventory", "mas-number", ID.unique(), {
-          value,
-          productId,
-          product: productId,
-        })
-      );
-    }
-
-    return Promise.all(promises);
-  };
-
   const runAction = async (product) => {
     if (product.quantity === 0) {
       await db.createDocument("drug-inventory", "notification", ID.unique(), {
@@ -105,12 +73,10 @@ export default async ({ req, res, log, error }) => {
     try {
       switch (evtArr.at(-1)) {
         case "create":
-          await generateMAS(product.$id);
           runAction(product);
           break;
 
         case "update":
-          await generateMAS(product.$id);
           runAction(product);
           break;
 

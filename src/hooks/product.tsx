@@ -8,6 +8,28 @@ import { databases, storage } from "~/lib/appWrite";
 import { type NewItemSchema } from "~/lib/validation";
 import { useCreateStockHistory } from "./stockHistory.hook";
 
+const generateMAS = async (productId) => {
+  const promises = [];
+  for (let i = 0; i < 50; i++) {
+    const timestamp = Date.now().toString().slice(-8);
+    const randomPart = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0");
+    console.log("🚀 ~ file: main.js:28 ~ generateMAS ~ randomPart:", randomPart);
+    const value = timestamp + randomPart;
+
+    promises.push(
+      databases.createDocument("drug-inventory", "mas-number", ID.unique(), {
+        value,
+        productId,
+        product: productId,
+      })
+    );
+  }
+
+  return Promise.all(promises);
+};
+
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
   // const notifiMutation = useCreateNotification();
@@ -32,7 +54,11 @@ export const useCreateProduct = () => {
       }),
     });
 
-    return ProductSchema.parse(response);
+    const product = ProductSchema.parse(response);
+
+    await generateMAS(product.$id);
+
+    return product;
   };
 
   return useMutation({
