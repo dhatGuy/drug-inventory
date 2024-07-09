@@ -95,11 +95,12 @@ export default async ({ req, res, log, error }) => {
     try {
       switch (evtArr.at(-1)) {
         case "create":
-          generateMAS(product.$id);
+          await generateMAS(product.$id);
           runAction(product);
           break;
 
         case "update":
+          await generateMAS(product.$id);
           runAction(product);
           break;
 

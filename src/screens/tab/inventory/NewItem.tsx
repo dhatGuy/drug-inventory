@@ -85,12 +85,19 @@ export default function NewItem({ navigation }) {
     if (!result.canceled) {
       const image = result.assets[0];
 
-      formMethods.setValue("image", {
-        name: image.fileName!,
-        type: image.mimeType!,
-        uri: image.uri,
-        size: image.fileSize!,
-      });
+      formMethods.setValue(
+        "image",
+        {
+          name: image.fileName!,
+          type: image.mimeType!,
+          uri: image.uri,
+          size: image.fileSize!,
+        },
+        {
+          shouldValidate: true,
+          shouldDirty: true,
+        }
+      );
     } else {
       alert("You did not select any image.");
     }
@@ -114,7 +121,10 @@ export default function NewItem({ navigation }) {
         type: image.mimeType!,
         uri: image.uri,
         size: image.fileSize!,
-      });
+      },{
+          shouldValidate: true,
+          shouldDirty: true,
+        });
     } else {
       alert("You did not select any image.");
     }
@@ -286,7 +296,10 @@ export default function NewItem({ navigation }) {
                 mode="date"
                 date={new Date(manufactureDate)}
                 onConfirm={(date) => {
-                  formMethods.setValue("manufactureDate", date.toDateString());
+                  formMethods.setValue("manufactureDate", date.toDateString(),{
+          shouldValidate: true,
+          shouldDirty: true,
+        });
                   setOpenManufactureDate(false);
                 }}
                 onCancel={() => {
@@ -314,7 +327,10 @@ export default function NewItem({ navigation }) {
                 mode="date"
                 date={new Date(expiryDate)}
                 onConfirm={(date) => {
-                  formMethods.setValue("expDate", date.toDateString());
+                  formMethods.setValue("expDate", date.toDateString(),{
+          shouldValidate: true,
+          shouldDirty: true,
+        });
                   setOpenExpiryDate(false);
                 }}
                 onCancel={() => {
