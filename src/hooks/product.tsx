@@ -6,6 +6,7 @@ import { documentListSchema } from "~/entities/appwriteSchema";
 import { ProductSchema, ProductUpdateSchema, ProductsSchema } from "~/entities/product.schema";
 import { databases, storage } from "~/lib/appWrite";
 import { type NewItemSchema } from "~/lib/validation";
+import { useCreateStockHistory } from "./stockHistory.hook";
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
@@ -117,14 +118,35 @@ export const useGetProduct = (id: string) => {
 
 export const useUpdateProduct = (id: string) => {
   const queryClient = useQueryClient();
+  const mutation = useCreateStockHistory();
+
   const updateProduct = async (data: Partial<ProductUpdateSchema>) => {
     const response = await databases.updateDocument("drug-inventory", "products", id, data);
     return response;
   };
 
   return useMutation({
+    onMutate() {
+      queryClient.cancelQueries({ queryKey: ["product", id] });
+      const previous = queryClient.getQueryData<ProductSchema>(["product", id]);
+      return { previous };
+    },
     mutationFn: (data: Partial<ProductUpdateSchema>) => updateProduct(data),
-    onSuccess: (data) => {
+    onSuccess: async (data, _context, variables) => {
+      const previous = variables?.previous;
+
+      if (previous && data.quantity !== (previous?.quantity ?? 0)) {
+        const quantity = data.quantity - previous.quantity;
+        await mutation.mutateAsync(
+          {
+            closingStock: previous?.quantity ?? 0,
+            product: id,
+            quantity,
+          },
+          {}
+        );
+      }
+
       queryClient.invalidateQueries({ queryKey: ["product", id] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
 

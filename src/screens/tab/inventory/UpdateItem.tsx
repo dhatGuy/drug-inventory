@@ -48,14 +48,25 @@ export default function UpdateItem({ navigation, route }) {
     resolver: zodResolver(NewItemSchema),
   });
 
+  const {
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+    setValue,
+  } = formMethods;
+
   useEffect(() => {
     if (item) {
-      formMethods.reset({
+      reset({
         price: item?.price.toString(),
         minStockLevel: item?.minStockLevel.toString(),
         itemName: item?.name,
         nafdacNumber: item?.nafdacNumber,
         image: {
+          name: item?.name,
+          type: "image/jpeg",
+          size: 1024 * 1024,
           uri: item?.imageUrl,
         },
         quantity: item?.quantity.toString(),
@@ -65,7 +76,7 @@ export default function UpdateItem({ navigation, route }) {
     }
   }, [item]);
 
-  const [image, quantity, price, manufactureDate, expiryDate] = formMethods.watch([
+  const [image, quantity, price, manufactureDate, expiryDate] = watch([
     "image",
     "quantity",
     "price",
@@ -216,7 +227,7 @@ export default function UpdateItem({ navigation, route }) {
   };
 
   return (
-    <StyledSafeAreaView className="!p-4">
+    <StyledSafeAreaView className="!px-4">
       <FormProvider {...formMethods}>
         <View className="mb-3 flex-row items-center justify-between">
           <Button
@@ -230,7 +241,7 @@ export default function UpdateItem({ navigation, route }) {
           </Button>
         </View>
 
-        <H2>New Item</H2>
+        <H2>Update Item</H2>
 
         <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
           <View className="mb-4">
@@ -241,7 +252,7 @@ export default function UpdateItem({ navigation, route }) {
                   variant="secondary"
                   className={cn(
                     "!h-44 w-full border border-gray-400 bg-white py-4",
-                    formMethods.formState.errors.image && "border-red-500"
+                    errors.image && "border-red-500"
                   )}>
                   {image ? (
                     <Image
@@ -257,9 +268,7 @@ export default function UpdateItem({ navigation, route }) {
                   )}
                 </Button>
               </DialogTrigger>
-              {formMethods.formState.errors.image ? (
-                <P className="pl-1 text-red-500">{formMethods.formState.errors.image?.message}</P>
-              ) : null}
+              {errors.image ? <P className="pl-1 text-red-500">{errors.image?.message}</P> : null}
               <DialogContent className="mx-4 min-w-[90%]">
                 <DialogHeader>
                   <DialogTitle>Select option</DialogTitle>
@@ -330,7 +339,7 @@ export default function UpdateItem({ navigation, route }) {
                 mode="date"
                 date={manufactureDate ? new Date(manufactureDate) : new Date()}
                 onConfirm={(date) => {
-                  formMethods.setValue("manufactureDate", date.toDateString(), {
+                  setValue("manufactureDate", date.toDateString(), {
                     shouldDirty: true,
                   });
                   setOpenManufactureDate(false);
@@ -360,7 +369,7 @@ export default function UpdateItem({ navigation, route }) {
                 mode="date"
                 date={expiryDate ? new Date(expiryDate) : new Date()}
                 onConfirm={(date) => {
-                  formMethods.setValue("expDate", date.toDateString(), { shouldDirty: true });
+                  setValue("expDate", date.toDateString(), { shouldDirty: true });
                   setOpenExpiryDate(false);
                 }}
                 onCancel={() => {
@@ -371,48 +380,16 @@ export default function UpdateItem({ navigation, route }) {
           </View>
 
           <Button
-            onPress={formMethods.handleSubmit(onSubmit)}
+            onPress={handleSubmit(onSubmit)}
             className="flex-row items-center justify-center gap-2"
             disabled={
               updateProductMutation.isPending || imageUploading || !formMethods.formState.isDirty
             }>
             {(updateProductMutation.isPending || imageUploading) && <ActivityIndicator />}
-            <Text className="uppercase ">Save</Text>
+            <Text className="uppercase">Save</Text>
           </Button>
-
-          {/* <View className="mb-4">
-            <Label nativeID="Category">Category</Label>
-            <Select>
-              <SelectTrigger className="">
-                <SelectValue
-                  className="native:text-lg font-PoppinsMedium text-sm text-foreground"
-                  placeholder="Select category"
-                />
-                </SelectTrigger>
-              <SelectContent className="w-full" insets={contentInsets}>
-                <SelectGroup>
-                  <SelectLabel>Fruits</SelectLabel>
-                  <SelectSeparator />
-                  {emojisWithIcons.map((item) => (
-                    <SelectItem key={item.title} label={item.title} value={item.value}>
-                      {item.title}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </View> */}
         </KeyboardAwareScrollView>
       </FormProvider>
     </StyledSafeAreaView>
   );
 }
-
-const emojisWithIcons = [
-  { title: "Pain Reliever", value: "pain-reliever" },
-  { title: "Anti-Relaxants", value: "anti-relaxants" },
-  { title: "Antibiotics", value: "antibiotics" },
-  { title: "Hormonal Medications", value: "hormonal-medications" },
-  { title: "Vitamins", value: "vitamins" },
-  { title: "Other", value: "other" },
-];
