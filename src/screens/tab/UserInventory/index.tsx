@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import { FlatList, Image, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 import { StyledSafeAreaView } from "~/components";
 import { Button } from "~/components/ui";
 import { H3, H4, P } from "~/components/ui/typography";
@@ -51,7 +51,7 @@ const Item = ({ item }) => {
 };
 
 export default function UserInventory() {
-  const { data } = useQuery(userInventoryQueryOptions);
+  const { data, isPending } = useQuery(userInventoryQueryOptions);
 
   return (
     <StyledSafeAreaView>
@@ -64,10 +64,18 @@ export default function UserInventory() {
         keyExtractor={(item) => item.$id}
         ListEmptyComponent={
           <View className="items-center flex-1 justify-center">
-            <H4 className="text-lg font-PoppinsSemiBold text-center">Your inventory is empty</H4>
-            <P className="text-center text-gray-500">
-              Once you add an item to your inventory, it will appear here
-            </P>
+            {isPending ? (
+              <ActivityIndicator size="large" />
+            ) : (
+              <>
+                <H4 className="text-lg font-PoppinsSemiBold text-center">
+                  Your inventory is empty
+                </H4>
+                <P className="text-center text-gray-500">
+                  Once you add an item to your inventory, it will appear here
+                </P>
+              </>
+            )}
           </View>
         }
       />

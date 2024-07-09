@@ -7,7 +7,7 @@ import { ActivityIndicator, Alert, FlatList, Input as RNInput, View } from "reac
 
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Input, Text } from "~/components/ui";
-import { H2, H4 } from "~/components/ui/typography";
+import { H2, H3, H4 } from "~/components/ui/typography";
 import { useBackHandler } from "~/hooks/useBackHandler";
 import useDebounce from "~/hooks/useDebounce";
 import { productsQueryOptions } from "~/lib/queryOptions";
@@ -66,7 +66,7 @@ export default function Inventory({ navigation }) {
   return (
     <StyledSafeAreaView>
       <View className="flex-row items-center justify-between">
-        <H2 className="pb-0">Inventory</H2>
+        <H3 className="pb-0">Inventory</H3>
         <Button variant="ghost" size="icon">
           <MaterialCommunityIcons name="sort" size={24} />
         </Button>

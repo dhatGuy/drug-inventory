@@ -14,14 +14,11 @@ import Toast, {
   ToastConfig,
 } from "react-native-toast-message";
 
-import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
-import { useReactQueryDevTools } from "@dev-plugins/react-query/build/useReactQueryDevTools";
 import { AppStateStatus, Platform } from "react-native";
 import ErrorBoundary from "~/components/error-boundary";
 import { PortalHost } from "~/components/primitives/portal";
 import { useAppState } from "~/hooks/useAppState";
 import useLoadResources from "~/hooks/useLoadResources";
-import { useOnlineManager } from "~/hooks/useOnlineManager";
 import { clientPersister } from "~/lib/clientPersister";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
@@ -90,9 +87,9 @@ const toastConfig: ToastConfig = {
 };
 
 export default function App() {
-  useOnlineManager();
-  useMMKVDevTools();
-  useReactQueryDevTools(queryClient);
+  // useOnlineManager();
+  // useMMKVDevTools();
+  // useReactQueryDevTools(queryClient);
   useAppState(onAppStateChange);
 
   const { loaded, error } = useLoadResources();

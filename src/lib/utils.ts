@@ -27,7 +27,7 @@ export function formatDistance(
     xSeconds: "{{count}} sec",
     halfAMinute: "30 sec",
     lessThanXMinutes: "{{count}} mon",
-    xMinutes: "{{count}} mth",
+    xMinutes: "{{count}} mins",
     aboutXHours: "{{count}} hr",
     xHours: "{{count}} hr",
     xDays: "{{count}} d",

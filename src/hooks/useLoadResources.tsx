@@ -9,11 +9,11 @@ import {
   Poppins_800ExtraBold,
   Poppins_900Black,
 } from "@expo-google-fonts/poppins";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 
 import { useColorScheme } from "~/lib/useColorScheme";
+import { mmkvStorage } from "~/lib/utils";
 import { useUserActions } from "~/store/authStore";
 
 export default function useLoadResources() {
@@ -23,10 +23,10 @@ export default function useLoadResources() {
   const [error, setError] = useState(false);
 
   const selectedTheme = async () => {
-    const theme = await AsyncStorage.getItem("theme");
+    const theme = mmkvStorage.getString("theme");
     const colorTheme = theme === "dark" ? "dark" : "light";
     if (!theme) {
-      await AsyncStorage.setItem("theme", colorScheme);
+      mmkvStorage.set("theme", colorScheme);
     } else if (colorTheme !== colorScheme) {
       setColorScheme(colorTheme);
     } else {

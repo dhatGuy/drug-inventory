@@ -7,7 +7,6 @@ import { ActivityIndicator, Linking, View } from "react-native";
 import AuthStack from "./auth-stack";
 import TabNavigator from "./tab-navigator";
 
-import { useReactNavigationDevTools } from "@dev-plugins/react-navigation/build/useReactNavigationDevTools";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { mmkvStorage } from "~/lib/utils";
 import { useAuthStatus } from "~/store/authStore";
@@ -62,7 +61,7 @@ const PERSISTENCE_KEY = "NAVIGATION_STATE_V1";
 const ref = createNavigationContainerRef();
 
 export default function RootStack({ isLoaded }: { isLoaded: boolean }) {
-  useReactNavigationDevTools(ref);
+  // useReactNavigationDevTools(ref);
   const [isReady, setIsReady] = React.useState(!__DEV__);
   const [initialState, setInitialState] = React.useState();
   const status = useAuthStatus();

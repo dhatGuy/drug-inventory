@@ -2,7 +2,6 @@ import FeatherIcon from "@expo/vector-icons/Feather";
 import { useFont } from "@shopify/react-native-skia";
 import poppins from "assets/fonts/Poppins-Medium.ttf";
 import { ScrollView, View } from "react-native";
-import { BarGroup, CartesianChart } from "victory-native";
 
 import { InventoryItem, StyledSafeAreaView } from "~/components";
 import { Button, Text } from "~/components/ui";
@@ -116,24 +115,7 @@ export default function Home({ navigation }) {
 
         <View className="pt-6">
           <H3 className="">Analytics</H3>
-          <View className="min-h-[300px]">
-            <CartesianChart
-              data={DATA}
-              xKey="x"
-              yKeys={["sales", "purchase"]}
-              axisOptions={{ font }}>
-              {({ points, chartBounds }) => (
-                //👇 pass a PointsArray to the Bar component, as well as options.
-                <BarGroup
-                  chartBounds={chartBounds}
-                  betweenGroupPadding={0.3}
-                  withinGroupPadding={0.1}>
-                  <BarGroup.Bar points={points.purchase} color="red" />
-                  <BarGroup.Bar points={points.sales} color="blue" />
-                </BarGroup>
-              )}
-            </CartesianChart>
-          </View>
+          <View className="min-h-[300px]"></View>
         </View>
       </ScrollView>
     </StyledSafeAreaView>

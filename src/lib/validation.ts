@@ -79,7 +79,9 @@ export const NewItemSchema = z.object({
     .date({ required_error: "Required" })
     .min(new Date(), { message: "Date is in the past" })
     .default(new Date()),
-  manufactureDate: z.coerce.date({ required_error: "Required" }).default(new Date()),
+  manufactureDate: z.coerce
+    .date({ required_error: "Required" })
+    .default(new Date(new Date().setDate(new Date().getDate() + 1))),
 });
 
 export type NewItemSchema = z.infer<typeof NewItemSchema>;

@@ -50,12 +50,15 @@ export default function NewItem({ navigation }) {
       itemName: "",
       nafdacNumber: "",
       quantity: "0",
-      expDate: new Date().toDateString(),
+      image: undefined,
+      expDate: new Date(new Date().setDate(new Date().getDate() + 1)).toDateString(),
       manufactureDate: new Date().toDateString(),
     },
   });
 
-  const [image, quantity, price, manufactureDate, expiryDate] = formMethods.watch([
+  const { watch } = formMethods;
+
+  const [image, quantity, price, manufactureDate, expiryDate] = watch([
     "image",
     "quantity",
     "price",

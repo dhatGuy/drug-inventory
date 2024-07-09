@@ -12,7 +12,7 @@ import { useUser } from "~/store/authStore";
 
 export default function ItemNotifications() {
   const user = useUser();
-  const isAdmin = user?.labels.includes("admin");
+  const isAdmin = user?.labels.includes("admin") ?? false;
 
   const { data: notifications, isLoading, isError } = useGetNotifications(isAdmin);
 
@@ -91,7 +91,7 @@ const getNotificationMessage = (notification: NotificationSchema) => {
       return (
         <Text>
           The drug <Text className="font-PoppinsSemiBold">{product.name}</Text> has expired on{" "}
-          {product.expiryDate}.
+          {new Date(notification.expiredDate ?? product.expiryDate).toLocaleDateString()}.
         </Text>
       );
     case "review":

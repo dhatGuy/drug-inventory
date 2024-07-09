@@ -69,6 +69,7 @@ export default function ReportForm() {
     ...productsQueryOptions(debouncedSearchText),
     placeholderData: (prev) => prev,
     enabled: debouncedSearchText.length > 3,
+    persister: undefined,
   });
 
   const onSubmit: SubmitHandler<NewReportSchema> = async (data) => {
@@ -158,16 +159,16 @@ export default function ReportForm() {
 
           <CustomBottomSheet
             ref={bottomSheetModalRef}
-            index={1}
+            index={0}
             handleStyle={{ display: "none" }}
             snapPoints={snapPoints}
             onChange={handleSheetPositionChange}>
             <BottomSheetView className="p-4" style={{ flex: 1 }}>
               <StyledSafeAreaView>
-                <Text>Search Product</Text>
+                <Text>Search Drug</Text>
                 <BottomSheetTextInput
                   autoCapitalize="none"
-                  autoFocus
+                  // autoFocus
                   autoCorrect={false}
                   clearButtonMode="while-editing"
                   onChangeText={(val) => setSearchText(val)}
