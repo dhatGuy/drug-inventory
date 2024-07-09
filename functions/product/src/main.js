@@ -20,7 +20,13 @@ export default async ({ req, res, log, error }) => {
   const generateMAS = async (productId) => {
     const promises = [];
     for (let i = 0; i < 50; i++) {
-      const value = generateUniqueID();
+      const timestamp = Date.now().toString().slice(-8);
+      console.log("🚀 ~ file: main.js:24 ~ generateMAS ~ timestamp:", timestamp);
+      const randomPart = Math.floor(Math.random() * 1000)
+        .toString()
+        .padStart(3, "0");
+      console.log("🚀 ~ file: main.js:28 ~ generateMAS ~ randomPart:", randomPart);
+      const value = timestamp + randomPart;
       log("🚀 ~ file: main.js:24 ~ generateMAS ~ value:", value);
       promises.push(
         db.createDocument("drug-inventory", "mas-number", ID.unique(), {
