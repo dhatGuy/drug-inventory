@@ -4,30 +4,47 @@ import { ActivityIndicator, FlatList, Pressable, View } from "react-native";
 import { StyledSafeAreaView } from "~/components";
 import { Button, Text } from "~/components/ui";
 import { Separator } from "~/components/ui/separator";
-import { H2 } from "~/components/ui/typography";
+import { H2, H3, H4, P } from "~/components/ui/typography";
 import { NotificationSchema } from "~/entities/notification.schema";
 import { useGetNotifications } from "~/hooks/notification.hook";
 import { cn, formattedDate } from "~/lib/utils";
 import { useUser } from "~/store/authStore";
 
+const Item = ({ item }) => (
+  <Pressable className="flex-row gap-4 px-2 py-4">
+    <View
+      className={cn("size-12 flex-row items-center justify-center gap-1 rounded-full", {
+        "bg-blue-500": item.type === "low-stock",
+        "bg-red-500": item.type === "out-of-stock",
+        "bg-gray-500": item.type === "expired-drug",
+        "bg-green-500": item.type === "review",
+      })}>
+      <Feather color="#fff" name={getNotificationIcon(item.type)} size={20} />
+    </View>
+
+    <View className="flex-1">
+      <View className="flex-row items-center justify-between">
+        <H2 className="text-lg">{getNotificationTitle(item.type)}</H2>
+        <Text className="text-sm text-gray-400">{formattedDate(new Date(item.$createdAt))}</Text>
+      </View>
+      <View>{getNotificationMessage(item)}</View>
+    </View>
+  </Pressable>
+);
+
 export default function ItemNotifications() {
   const user = useUser();
   const isAdmin = user?.labels.includes("admin") ?? false;
 
-  const { data: notifications, isLoading, isError } = useGetNotifications(isAdmin);
-
-  if (isLoading) {
-    return (
-      <StyledSafeAreaView className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" />
-      </StyledSafeAreaView>
-    );
-  }
+  const { data: notifications, isPending, isError, refetch } = useGetNotifications(isAdmin);
 
   if (isError) {
     return (
       <StyledSafeAreaView className="flex-1 items-center justify-center">
         <Text>Something went wrong</Text>
+        <Button onPress={() => refetch()} size="icon" variant="secondary">
+          <Feather name="refresh-cw" size={24} />
+        </Button>
       </StyledSafeAreaView>
     );
   }
@@ -35,11 +52,7 @@ export default function ItemNotifications() {
   return (
     <StyledSafeAreaView>
       <View className="flex-row items-center justify-between">
-        <Text className="native:text-lg">Notifications</Text>
-
-        <Button variant="ghost" size="icon">
-          <Feather name="settings" size={20} />
-        </Button>
+        <H3>Notifications</H3>
       </View>
 
       <Separator className="" />
@@ -47,29 +60,23 @@ export default function ItemNotifications() {
       <View>
         <FlatList
           data={notifications?.documents}
-          renderItem={({ item }) => (
-            <Pressable className="flex-row gap-4 px-2 py-4">
-              <View
-                className={cn("size-12 flex-row items-center justify-center gap-1 rounded-full", {
-                  "bg-blue-500": item.type === "low-stock",
-                  "bg-red-500": item.type === "out-of-stock",
-                  "bg-gray-500": item.type === "expired-drug",
-                  "bg-green-500": item.type === "review",
-                })}>
-                <Feather color="#fff" name={getNotificationIcon(item.type)} size={20} />
-              </View>
-
-              <View className="flex-1">
-                <View className="flex-row items-center justify-between">
-                  <H2 className="text-lg">{getNotificationTitle(item.type)}</H2>
-                  <Text className="text-sm text-gray-400">
-                    {formattedDate(new Date(item.$createdAt))}
-                  </Text>
-                </View>
-                <View>{getNotificationMessage(item)}</View>
-              </View>
-            </Pressable>
-          )}
+          ListEmptyComponent={
+            <View className="items-center flex-1 justify-center">
+              {isPending ? (
+                <ActivityIndicator size="large" />
+              ) : (
+                <>
+                  <H4 className="text-lg font-PoppinsSemiBold text-center">
+                    Your inventory is empty
+                  </H4>
+                  <P className="text-center text-gray-500">
+                    Once you add an item to your inventory, it will appear here
+                  </P>
+                </>
+              )}
+            </View>
+          }
+          renderItem={({ item }) => <Item item={item} />}
           ItemSeparatorComponent={() => <Separator />}
         />
       </View>

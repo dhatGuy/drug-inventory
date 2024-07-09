@@ -7,32 +7,20 @@ export default async ({ req, res, log, error }) => {
     .setKey(process.env.APPWRITE_API_KEY);
 
   const db = new Databases(client);
-  const hexTimestamp = () => {
-    const now = new Date();
-    const sec = Math.floor(now.getTime() / 1000);
-    const msec = now.getMilliseconds();
 
-    // Convert to hexadecimal
-    const hexTimestamp = sec.toString(16) + msec.toString(16).padStart(4, "0");
-    return hexTimestamp;
-  };
-
-  function unique(padding = 0) {
-    // Generate a unique ID with padding to have a longer ID
-    const baseId = hexTimestamp();
-    let randomPadding = "";
-    for (let i = 0; i < padding; i++) {
-      const randomHexDigit = Math.floor(Math.random() * 16).toString(16);
-      randomPadding += randomHexDigit;
-    }
-    return baseId + randomPadding;
+  function generateUniqueID() {
+    const timestamp = Date.now().toString().slice(-8);
+    const randomPart = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0");
+    return parseInt(timestamp + randomPart);
   }
 
   //generate 50 MAS numbers for the product
   const generateMAS = async (productId) => {
     for (let i = 0; i < 50; i++) {
       await db.createDocument("drug-inventory", "mas-number", ID.unique(), {
-        value: unique(),
+        value: generateUniqueID(),
         productId,
       });
     }

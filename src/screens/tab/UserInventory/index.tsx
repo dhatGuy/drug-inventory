@@ -44,7 +44,7 @@ const Item = ({ item }) => {
       </View>
 
       <Button variant="destructive" size="icon" className="ml-auto" onPress={onAddToInventory}>
-        <Feather name="minus-circle" size={24} color="#fff" />
+        <Feather name="trash-2" size={24} color="#fff" />
       </Button>
     </View>
   );

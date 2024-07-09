@@ -35,6 +35,8 @@ export function useCreateStockHistory() {
       queryClient.invalidateQueries({ queryKey: ["stock-history"] });
 
       queryClient.invalidateQueries({ queryKey: ["product", variables.product] });
+
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError: () => {
       Toast.show({
