@@ -18,16 +18,20 @@ export default async ({ req, res, log, error }) => {
 
   //generate 50 MAS numbers for the product
   const generateMAS = async (productId) => {
+    const promises = [];
     for (let i = 0; i < 50; i++) {
       const value = generateUniqueID();
-      log("MAS Number:", value);
-      await db.createDocument("drug-inventory", "mas-number", ID.unique(), {
-        value,
-        productId,
-        product: productId,
-      });
+      log("🚀 ~ file: main.js:24 ~ generateMAS ~ value:", value);
+      promises.push(
+        db.createDocument("drug-inventory", "mas-number", ID.unique(), {
+          value,
+          productId,
+          product: productId,
+        })
+      );
     }
-    return mas;
+
+    return Promise.all(promises);
   };
 
   const runAction = async (product) => {
