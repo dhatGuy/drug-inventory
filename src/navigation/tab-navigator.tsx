@@ -1,13 +1,13 @@
 import { Feather } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StackScreenProps } from "@react-navigation/stack";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 import { RootStackParamList, TabNavigatorParamList } from ".";
 import InventoryStack from "./inventory-stack";
 import MoreStack from "./more-stack";
 
-import Home from "~/screens/tab/home";
+import { StyleSheet } from "react-native";
+import UserInventory from "~/screens/tab/UserInventory";
 import ItemNotifications from "~/screens/tab/inventory/ItemNotifications";
 import { useUser } from "~/store/authStore";
 import { useRouteName } from "~/store/route.store";
@@ -15,8 +15,6 @@ import { useRouteName } from "~/store/route.store";
 const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 
 function TabBarIcon(props: { name: React.ComponentProps<typeof Feather>["name"]; color: string }) {
-  const { styles } = useStyles(stylesheet);
-
   return <Feather size={28} style={styles.tabBarIcon} {...props} />;
 }
 
@@ -26,7 +24,9 @@ export default function TabLayout({ navigation }: Props) {
   const user = useUser();
   const currentRouteName = useRouteName();
 
-  const hide = !["Home", "Inventory", "Notification", "More"].includes(currentRouteName ?? "");
+  const hide = !["Home", "Inventory", "Notification", "More", "UserInventory"].includes(
+    currentRouteName ?? ""
+  );
 
   return (
     <Tab.Navigator
@@ -42,14 +42,6 @@ export default function TabLayout({ navigation }: Props) {
         tabBarShowLabel: false,
       }}>
       <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-        }}
-      />
-      <Tab.Screen
         name="InventoryTab"
         component={InventoryStack}
         options={{
@@ -57,16 +49,24 @@ export default function TabLayout({ navigation }: Props) {
           tabBarIcon: ({ color }) => <TabBarIcon name="package" color={color} />,
         }}
       />
-      {user?.labels.includes("admin") && (
+      {!user?.labels.length && (
         <Tab.Screen
-          name="Notification"
-          component={ItemNotifications}
+          name="UserInventory"
+          component={UserInventory}
           options={{
-            title: "Notification",
-            tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
+            title: "User Inventory",
+            tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
           }}
         />
       )}
+      <Tab.Screen
+        name="Notification"
+        component={ItemNotifications}
+        options={{
+          title: "Notification",
+          tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
+        }}
+      />
       <Tab.Screen
         name="MoreTab"
         component={MoreStack}
@@ -79,7 +79,7 @@ export default function TabLayout({ navigation }: Props) {
   );
 }
 
-const stylesheet = createStyleSheet({
+const styles = StyleSheet.create({
   headerRight: {
     marginRight: 15,
   },

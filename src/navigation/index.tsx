@@ -29,6 +29,7 @@ export type NotificationStackParamList = {
 
 export type TabNavigatorParamList = {
   Home: undefined;
+  UserInventory: undefined;
   InventoryTab: InventoryStackParamList;
   Notification: NotificationStackParamList;
   MoreTab: MoreStackParamList;

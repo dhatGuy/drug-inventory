@@ -70,31 +70,27 @@ export default function Settings() {
 
             <View className="mx-3 rounded-md flex gap-6">
               <LinkButton
-                to="/Settings"
                 variant="secondary"
-                className="flex-row items-center justify-start gap-2 p-3">
-                <Text className="text-xl text-black">Settings</Text>
-              </LinkButton>
-              <LinkButton
-                variant="secondary"
-                // to={{ screen: "MoreTab", params: { screen: "Reviews" } }}
                 to="/Reviews"
                 className="flex-row items-center justify-start gap-2 p-3"
                 style={{ flex: 1 }}>
                 <Text className="text-xl text-black">Reviews</Text>
               </LinkButton>
-              <LinkButton
-                to="/Reports"
-                variant="secondary"
-                className="flex-row items-center justify-start gap-2 p-3">
-                <Text className="text-xl text-black">Reports</Text>
-              </LinkButton>
-              <LinkButton
-                to="/NewReport"
-                variant="secondary"
-                className="flex-row items-center justify-start gap-2 p-3">
-                <Text className="text-xl text-black">Report Fake Drug</Text>
-              </LinkButton>
+              {user?.labels.includes("admin") || user?.labels.includes("nafdac") ? (
+                <LinkButton
+                  to="/Reports"
+                  variant="secondary"
+                  className="flex-row items-center justify-start gap-2 p-3">
+                  <Text className="text-xl text-black">Reports</Text>
+                </LinkButton>
+              ) : (
+                <LinkButton
+                  to="/NewReport"
+                  variant="secondary"
+                  className="flex-row items-center justify-start gap-2 p-3">
+                  <Text className="text-xl text-black">Report Fake Drug</Text>
+                </LinkButton>
+              )}
               <Button
                 onPress={handleSignOut}
                 variant="secondary"

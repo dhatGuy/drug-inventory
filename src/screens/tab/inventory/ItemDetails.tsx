@@ -1,4 +1,5 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { ActivityIndicator, Image, View } from "react-native";
 import { MaterialTabBar, Tabs } from "react-native-collapsible-tab-view";
@@ -30,23 +31,38 @@ import { Separator } from "~/components/ui/separator";
 import { TextClassContext } from "~/components/ui/text";
 import { H3 } from "~/components/ui/typography";
 import { useDeleteProduct, useGetProduct } from "~/hooks/product";
+import { useAddUserInventory } from "~/hooks/userInventory.hook";
+import { userInventoryQueryByIdOptions } from "~/lib/queryOptions";
 import { useUser } from "~/store/authStore";
 
 const ItemDetails = ({ route, navigation }) => {
   const { id } = route.params;
+  const user = useUser();
   const { data, isPending, isError, error } = useGetProduct(id);
   const deleteMutation = useDeleteProduct(id);
   const [open, setOpen] = React.useState(false);
   const [openQty, setOpenQty] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
   const insets = useSafeAreaInsets();
-  const user = useUser();
+  const userInventory = useQuery(userInventoryQueryByIdOptions(id, user?.$id!));
+  const addToInventory = useAddUserInventory();
 
   const contentInsets = {
     top: insets.top + 10,
     bottom: insets.bottom + 10,
     left: 12,
     right: 12,
+  };
+
+  const onAddToInventory = () => {
+    addToInventory.mutate({
+      product: data?.$id,
+      user: user?.$id,
+      productId: data?.$id,
+      userId: user?.$id,
+      action: userInventory?.data?.total === 0 ? "create" : "update",
+      id: userInventory?.data?.documents[0]?.$id,
+    });
   };
 
   if (isPending) {
@@ -167,8 +183,19 @@ const ItemDetails = ({ route, navigation }) => {
                 </Badge>
               </View>
             </View>
+            {user?.labels.includes("admin") ? (
+              <UpdateQuantity open={openQty} setOpen={setOpenQty} item={data} />
+            ) : null}
 
-            <UpdateQuantity open={openQty} setOpen={setOpenQty} item={data} />
+            {!user?.labels.length ? (
+              <Button onPress={onAddToInventory} className="flex-row gap-3">
+                <Text>
+                  {userInventory?.data?.total ?? 0 > 0
+                    ? "Remove from Inventory"
+                    : "Add to Inventory"}
+                </Text>
+              </Button>
+            ) : null}
           </View>
         )}>
         <Tabs.Tab name="Overview">

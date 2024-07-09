@@ -4,6 +4,7 @@ import { documentListSchema } from "~/entities/appwriteSchema";
 import { DrugReportSchema } from "~/entities/drugReport.schema";
 import { ProductSchema } from "~/entities/product.schema";
 import { ReviewSchema } from "~/entities/review.schema";
+import { UserInventorySchema } from "~/entities/userInventory.schema";
 import { databases } from "./appWrite";
 
 export const reviewsQueryOptions = queryOptions({
@@ -42,3 +43,29 @@ export const drugReportQueryOptions = queryOptions({
   queryKey: ["drugReport"],
   queryFn: getDrugReport,
 });
+
+const getUserInventory = async () => {
+  const response = await databases.listDocuments("drug-inventory", "user-inventory");
+  const result = documentListSchema(UserInventorySchema).parse(response);
+  return result;
+};
+
+export const userInventoryQueryOptions = queryOptions({
+  queryKey: ["userInventory"],
+  queryFn: getUserInventory,
+});
+
+const getUserInventoryById = async (productId: string, userId: string) => {
+  const response = await databases.listDocuments("drug-inventory", "user-inventory", [
+    Query.equal("productId", productId),
+    Query.equal("userId", userId),
+  ]);
+  const result = documentListSchema(UserInventorySchema).parse(response);
+  return result;
+};
+
+export const userInventoryQueryByIdOptions = (id: string, userId: string) =>
+  queryOptions({
+    queryKey: ["userInventory", id, userId],
+    queryFn: () => getUserInventoryById(id, userId),
+  });
