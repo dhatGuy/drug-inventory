@@ -32,7 +32,10 @@ import { TextClassContext } from "~/components/ui/text";
 import { H3 } from "~/components/ui/typography";
 import { useDeleteProduct, useGetProduct } from "~/hooks/product";
 import { useAddUserInventory } from "~/hooks/userInventory.hook";
-import { userInventoryQueryByIdOptions } from "~/lib/queryOptions";
+import {
+  masNumberQueryByProductIdOptions,
+  userInventoryQueryByIdOptions,
+} from "~/lib/queryOptions";
 import { useUser } from "~/store/authStore";
 
 const ItemDetails = ({ route, navigation }) => {
@@ -46,6 +49,7 @@ const ItemDetails = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
   const userInventory = useQuery(userInventoryQueryByIdOptions(id, user?.$id!));
   const addToInventory = useAddUserInventory();
+  const masNumberQuery = useQuery(masNumberQueryByProductIdOptions(id));
 
   const contentInsets = {
     top: insets.top + 10,
@@ -246,6 +250,26 @@ const ItemDetails = ({ route, navigation }) => {
                   </Text>
                   <Text className="text-gray-600">Closing Stock: {item.closingStock}</Text>
                 </View>
+              </View>
+            )}
+            keyExtractor={(item) => item.$id}
+            showsVerticalScrollIndicator={false}
+          />
+        </Tabs.Tab>
+        <Tabs.Tab name="MAS Number">
+          <Tabs.FlatList
+            data={masNumberQuery.data?.documents ?? []}
+            ItemSeparatorComponent={() => <Separator />}
+            contentContainerClassName="gap-4 mt-4 px-4"
+            renderItem={({ item }) => (
+              <View className="flex-row items-center justify-between">
+                <Text className="font-PoppinsSemiBold">
+                  {new Date(item.$createdAt).toLocaleDateString("en-GB", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </Text>
               </View>
             )}
             keyExtractor={(item) => item.$id}

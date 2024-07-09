@@ -19,9 +19,12 @@ export default async ({ req, res, log, error }) => {
   //generate 50 MAS numbers for the product
   const generateMAS = async (productId) => {
     for (let i = 0; i < 50; i++) {
+      const value = generateUniqueID();
+      log("MAS Number:", value);
       await db.createDocument("drug-inventory", "mas-number", ID.unique(), {
-        value: generateUniqueID(),
+        value,
         productId,
+        product: productId,
       });
     }
     return mas;
