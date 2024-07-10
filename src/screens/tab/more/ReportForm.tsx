@@ -2,7 +2,6 @@ import { Feather } from "@expo/vector-icons";
 import {
   BottomSheetFlatList,
   BottomSheetModal,
-  BottomSheetTextInput,
   BottomSheetView as GBottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
@@ -14,6 +13,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { ActivityIndicator, Image, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { StyledSafeAreaView } from "~/components";
 import { CustomBottomSheet } from "~/components/CustomBottomSheet";
@@ -56,7 +56,7 @@ export default function ReportForm() {
   const { handleSheetPositionChange } = useBottomSheetBackHandler(bottomSheetModalRef);
 
   // variables
-  const snapPoints = useMemo(() => ["50%"], []);
+  const snapPoints = useMemo(() => ["50%", "90%"], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -71,6 +71,7 @@ export default function ReportForm() {
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, isFetching } = useQuery({
     ...productsQueryOptions(debouncedSearchText),
+    queryKey: ["products", "search", debouncedSearchText],
     enabled: debouncedSearchText.length > 0,
     persister: undefined,
   });
@@ -162,28 +163,35 @@ export default function ReportForm() {
 
           <CustomBottomSheet
             ref={bottomSheetModalRef}
-            index={0}
+            index={1}
             handleStyle={{ display: "none" }}
             snapPoints={snapPoints}
             onDismiss={onDismiss}
+            // keyboardBehavior="fillParent"
+            // keyboardBlurBehavior="restore"
+            // android_keyboardInputMode="adjustResize"
             onChange={handleSheetPositionChange}>
-            <BottomSheetView className="p-4" style={{ flex: 1 }}>
-              <StyledSafeAreaView>
-                <Text>Search Drug</Text>
-                <BottomSheetTextInput
-                  autoCapitalize="none"
-                  // autoFocus
-                  autoCorrect={false}
-                  clearButtonMode="while-editing"
-                  onChangeText={(val) => setSearchText(val)}
-                  placeholder="Start searching.."
-                  // placeholderTextColor="#848484"
-                  returnKeyType="done"
-                  style={styles.input}
-                />
-
-                {isFetching && <ActivityIndicator color="#94A3B8" />}
+            <BottomSheetView style={{ flex: 1, padding: 12 }}>
+              <SafeAreaView style={{ flex: 1 }}>
                 <BottomSheetFlatList
+                  ListHeaderComponent={
+                    <>
+                      <Text>Search Drug</Text>
+                      <Input
+                        autoCapitalize="none"
+                        // autoFocus
+                        autoCorrect={false}
+                        clearButtonMode="while-editing"
+                        onChangeText={(val) => setSearchText(val)}
+                        placeholder="Start searching.."
+                        // placeholderTextColor="#848484"
+                        returnKeyType="done"
+                        style={styles.input}
+                      />
+
+                      {isFetching && <ActivityIndicator color="#94A3B8" />}
+                    </>
+                  }
                   data={data?.documents}
                   contentContainerStyle={{
                     flex: 1,
@@ -224,7 +232,7 @@ export default function ReportForm() {
                     </Button>
                   )}
                 />
-              </StyledSafeAreaView>
+              </SafeAreaView>
             </BottomSheetView>
           </CustomBottomSheet>
         </KeyboardAwareScrollView>

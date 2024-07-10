@@ -30,12 +30,14 @@ const Reviews = () => {
         <View className="flex-1">
           <Text className="font-PoppinsSemiBold text-lg">{item.title}</Text>
           <Text className="text-gray-600">{item.desc}</Text>
-          <View className="flex-row items-center gap-4">
-            <Text className="font-bold">by {item.user.name}</Text>
-            <View className="size-1 bg-gray-500 rounded-full" />
-            <Text className="text-gray-500 font-bold">
+          <View className="flex-row items-center justify-between gap-2 mt-2">
+            <H4 className="text-base">
+              by {item.user.name} on {item.product.name}
+            </H4>
+
+            <H4 className="text-gray-500 text-base">
               {formattedDate(new Date(item.$createdAt), true)}
-            </Text>
+            </H4>
           </View>
         </View>
       </View>
@@ -102,6 +104,7 @@ const Reviews = () => {
         data={data?.documents ?? []}
         // ListHeaderComponent={ListHeader}
         renderItem={renderItem}
+        ItemSeparatorComponent={() => <Separator className="my-2" />}
         ListEmptyComponent={
           <View className="items-center flex-1 justify-center">
             {isPending ? (

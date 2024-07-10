@@ -11,6 +11,7 @@ import { H2, H3, H4 } from "~/components/ui/typography";
 import { useBackHandler } from "~/hooks/useBackHandler";
 import useDebounce from "~/hooks/useDebounce";
 import { productsQueryOptions } from "~/lib/queryOptions";
+import { useUser } from "~/store/authStore";
 
 cssInterop(CameraView, {
   className: "style",
@@ -20,6 +21,8 @@ export default function Inventory({ navigation }) {
   const [searchText, setSearchText] = useState("");
   const [permission, requestPermission] = useCameraPermissions();
   const searchRef = React.useRef<typeof RNInput>(null);
+  const user = useUser();
+  const isAdmin = user?.labels.includes("admin");
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, isPending, isError, error, refetch } = useQuery({
     ...productsQueryOptions(debouncedSearchText),
@@ -153,43 +156,14 @@ export default function Inventory({ navigation }) {
         />
       )}
 
-      <Button
-        className="absolute bottom-6 right-6 size-12 rounded-full shadow-lg"
-        size="icon"
-        onPress={() => navigation.navigate("NewItem")}>
-        <Feather name="plus" color="white" size={26} />
-      </Button>
+      {isAdmin && (
+        <Button
+          className="absolute bottom-6 right-6 size-12 rounded-full shadow-lg"
+          size="icon"
+          onPress={() => navigation.navigate("NewItem")}>
+          <Feather name="plus" color="white" size={26} />
+        </Button>
+      )}
     </StyledSafeAreaView>
   );
 }
-
-const items = [
-  {
-    icon: "clock",
-    label: "Aspirin",
-    exp: "10-01-2023",
-    color: "#d9edf7",
-    unitLeft: 32,
-  },
-  {
-    icon: "thermometer",
-    label: "Ibuprofen",
-    exp: "05-03-2024",
-    color: "#f0f9fa",
-    unitLeft: 80,
-  },
-  {
-    icon: "droplet",
-    label: "Saline Solution",
-    exp: "15-06-2024",
-    color: "#d0e3f0",
-    unitLeft: 45,
-  },
-  {
-    icon: "alert-triangle",
-    label: "Penicillin (Caution)",
-    exp: "28-02-2024",
-    color: "#ffe3e3",
-    unitLeft: 12,
-  },
-];

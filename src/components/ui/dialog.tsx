@@ -75,8 +75,8 @@ const DialogContent = React.forwardRef<
         <DialogPrimitive.Content
           ref={ref}
           className={cn(
-            `z-50 gap-4 border border-red-500 min-w-full web:cursor-default bg-background p-6
-            shadow-lg web:duration-200 rounded-lg`,
+            `z-50 gap-4 border min-w-full web:cursor-default bg-background p-6 shadow-lg
+            web:duration-200 rounded-lg`,
             open
               ? "web:animate-in web:fade-in-0 web:zoom-in-95"
               : "web:animate-out web:fade-out-0 web:zoom-out-95",

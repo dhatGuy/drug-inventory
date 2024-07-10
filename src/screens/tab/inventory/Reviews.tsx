@@ -163,13 +163,14 @@ const Reviews = ({ navigation, route }) => {
                   </View>
                   <Text className="text-gray-600">{item.desc}</Text>
                   <View className="flex-row items-center gap-2">
-                    <Text className="font-bold">
-                      by {item.user.name} {user?.$id === item.user.$id && "(You)"}
-                    </Text>
+                    <H4 className="text-base">
+                      by {item.user.name} {user?.$id === item.user.$id && "(You)"} on{" "}
+                      {item.product.name}
+                    </H4>
                     <View className="size-1 bg-gray-500 rounded-full" />
-                    <Text className="text-gray-500 font-bold">
+                    <H4 className="text-gray-500 text-base">
                       {formattedDate(new Date(item.$createdAt), true)}
-                    </Text>
+                    </H4>
                   </View>
                 </View>
               </View>
@@ -177,53 +178,59 @@ const Reviews = ({ navigation, route }) => {
             ItemSeparatorComponent={() => <Separator className="my-2" />}
           />
 
-          <Button onPress={() => sheetRef.current?.present()}>
-            <Text className="text-lg">{userReview ? "Update Your Review" : "Add Your Review"}</Text>
-          </Button>
+          {!user?.labels.length && (
+            <>
+              <Button onPress={() => sheetRef.current?.present()}>
+                <Text className="text-lg">
+                  {userReview ? "Update Your Review" : "Add Your Review"}
+                </Text>
+              </Button>
+              <CustomBottomSheet
+                ref={sheetRef}
+                onChange={handleSheetPositionChange}
+                detached
+                bottomInset={50}
+                enableDynamicSizing
+                backgroundStyle={{ backgroundColor: "#fff" }}
+                style={{ paddingHorizontal: 20, paddingTop: 10, marginHorizontal: 20 }}
+                handleIndicatorStyle={{ display: "none" }}>
+                <BottomSheetView className="pb-8 px-4">
+                  <View className="flex-row items-center justify-between">
+                    <H3 className="text-lg">{userReview ? "Update" : "Submit"} Review</H3>
+                    <Button variant="ghost" size="icon" onPress={() => sheetRef.current?.close()}>
+                      <Feather name="x" size={24} />
+                    </Button>
+                  </View>
+                  <Separator className="my-4" />
+                  <FormProvider {...formMethods}>
+                    <View className="gap-4">
+                      <View>
+                        <Label className="mb-2" nativeID="title">
+                          Title
+                        </Label>
+                        <RHFInput name="title" placeholder="Enter title" />
+                      </View>
+                      <View>
+                        <Label className="mb-2" nativeID="title">
+                          Description
+                        </Label>
+                        <RHFInput name="desc" multiline placeholder="Enter description" />
+                      </View>
+                      <Button
+                        onPress={handleSubmit(onSubmit)}
+                        className="flex-row gap-2"
+                        disabled={mutation.isPending}>
+                        {mutation.isPending ? <ActivityIndicator /> : null}
+                        <Text>{userReview ? "Update" : "Submit"}</Text>
+                      </Button>
+                    </View>
+                  </FormProvider>
+                </BottomSheetView>
+              </CustomBottomSheet>
+            </>
+          )}
         </>
       )}
-      <CustomBottomSheet
-        ref={sheetRef}
-        onChange={handleSheetPositionChange}
-        detached
-        bottomInset={50}
-        enableDynamicSizing
-        backgroundStyle={{ backgroundColor: "#fff" }}
-        style={{ paddingHorizontal: 20, paddingTop: 10, marginHorizontal: 20 }}
-        handleIndicatorStyle={{ display: "none" }}>
-        <BottomSheetView className="pb-8">
-          <View className="flex-row items-center justify-between">
-            <H3 className="text-lg">Add Review</H3>
-            <Button variant="ghost" size="icon" onPress={() => sheetRef.current?.close()}>
-              <Feather name="x" size={24} />
-            </Button>
-          </View>
-          <Separator className="my-4" />
-          <FormProvider {...formMethods}>
-            <View className="gap-4">
-              <View>
-                <Label className="mb-2" nativeID="title">
-                  Title
-                </Label>
-                <RHFInput name="title" placeholder="Enter title" />
-              </View>
-              <View>
-                <Label className="mb-2" nativeID="title">
-                  Description
-                </Label>
-                <RHFInput name="desc" multiline placeholder="Enter description" />
-              </View>
-              <Button
-                onPress={handleSubmit(onSubmit)}
-                className="flex-row gap-2"
-                disabled={mutation.isPending}>
-                {mutation.isPending ? <ActivityIndicator /> : null}
-                <Text>{userReview ? "Update" : "Submit"}</Text>
-              </Button>
-            </View>
-          </FormProvider>
-        </BottomSheetView>
-      </CustomBottomSheet>
     </StyledSafeAreaView>
   );
 };

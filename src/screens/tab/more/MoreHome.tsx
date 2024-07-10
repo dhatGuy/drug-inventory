@@ -41,11 +41,7 @@ export default function Settings() {
               Account
             </Text>
             <View className="mx-3 rounded-md">
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-                className="flex-row items-center justify-start gap-2 p-3">
+              <TouchableOpacity className="flex-row items-center justify-start gap-2 p-3">
                 <Avatar
                   alt="Profile"
                   className="size-14 items-center justify-center border border-gray-400 bg-green-700">
@@ -55,7 +51,7 @@ export default function Settings() {
                 <View className="">
                   <Text className="text-xl">{user?.name}</Text>
                   <Badge variant="secondary" className="self-start">
-                    <Text>{user?.labels[0] ?? "Customer"}</Text>
+                    <Text>{user?.labels[0]?.toUpperCase() ?? "CUSTOMER"}</Text>
                   </Badge>
                   <Text className="text-lg text-gray-500">{user?.email}</Text>
                 </View>
