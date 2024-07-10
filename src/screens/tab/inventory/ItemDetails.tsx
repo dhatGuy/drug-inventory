@@ -1,4 +1,5 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { ActivityIndicator, Image, View } from "react-native";
@@ -36,6 +37,7 @@ import {
   masNumberQueryByProductIdOptions,
   userInventoryQueryByIdOptions,
 } from "~/lib/queryOptions";
+import { cn } from "~/lib/utils";
 import { useUser } from "~/store/authStore";
 
 const ItemDetails = ({ route, navigation }) => {
@@ -47,6 +49,7 @@ const ItemDetails = ({ route, navigation }) => {
   const [openQty, setOpenQty] = React.useState(false);
   const [openDelete, setOpenDelete] = React.useState(false);
   const insets = useSafeAreaInsets();
+  const bottomHeight = useBottomTabBarHeight();
   const userInventory = useQuery(userInventoryQueryByIdOptions(id, user?.$id!));
   const addToInventory = useAddUserInventory();
   const masNumberQuery = useQuery(masNumberQueryByProductIdOptions(id));
@@ -164,6 +167,7 @@ const ItemDetails = ({ route, navigation }) => {
       </AlertDialog>
 
       <Tabs.Container
+        lazy
         renderTabBar={(props) => (
           <MaterialTabBar
             {...props}
@@ -182,8 +186,22 @@ const ItemDetails = ({ route, navigation }) => {
                 <H3 className="">{data.name}</H3>
                 <Text className="text-[#7f7f7f]">{data.quantity} units left</Text>
 
-                <Badge className="self-start py-2">
-                  <Text className="text-white">In Stock</Text>
+                <Badge
+                  className="self-start py-2"
+                  variant={
+                    data.quantity <= data.minStockLevel
+                      ? "destructive"
+                      : data.quantity === 0
+                        ? "secondary"
+                        : "default"
+                  }>
+                  <Text className="text-white">
+                    {data.quantity <= data.minStockLevel
+                      ? "Low Stock"
+                      : data.quantity === 0
+                        ? "Out of Stock"
+                        : "In Stock"}
+                  </Text>
                 </Badge>
               </View>
             </View>
@@ -230,7 +248,7 @@ const ItemDetails = ({ route, navigation }) => {
           <Tabs.FlatList
             data={data.stockHistory}
             ItemSeparatorComponent={() => <Separator />}
-            contentContainerClassName="gap-4 mt-4 px-4"
+            contentContainerClassName={cn("gap-4 mt-4 px-4 pb-8")}
             renderItem={({ item }) => (
               <View className="flex-row items-center justify-between">
                 <Text className="font-PoppinsSemiBold">
@@ -256,20 +274,14 @@ const ItemDetails = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
           />
         </Tabs.Tab>
-        <Tabs.Tab name="MAS Number">
+        <Tabs.Tab name="MAS Numbers">
           <Tabs.FlatList
             data={masNumberQuery.data?.documents ?? []}
             ItemSeparatorComponent={() => <Separator />}
-            contentContainerClassName="gap-4 mt-4 px-4"
+            contentContainerClassName="gap-4 mt-4 px-4 pb-8"
             renderItem={({ item }) => (
               <View className="flex-row items-center justify-between">
-                <Text className="font-PoppinsSemiBold">
-                  {new Date(item.$createdAt).toLocaleDateString("en-GB", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </Text>
+                <Text className="font-PoppinsSemiBold">{item.value}</Text>
               </View>
             )}
             keyExtractor={(item) => item.$id}

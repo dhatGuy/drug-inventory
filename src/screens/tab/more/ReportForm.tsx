@@ -63,12 +63,15 @@ export default function ReportForm() {
     bottomSheetModalRef.current?.present();
   }, []);
 
+  const onDismiss = useCallback(() => {
+    setSearchText("");
+  }, []);
+
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, isFetching } = useQuery({
     ...productsQueryOptions(debouncedSearchText),
-    placeholderData: (prev) => prev,
-    enabled: debouncedSearchText.length > 3,
+    enabled: debouncedSearchText.length > 0,
     persister: undefined,
   });
 
@@ -118,14 +121,14 @@ export default function ReportForm() {
             <Controller
               control={control}
               name="product.name"
-              render={({ field: { onChange, value }, formState: { isValid } }) => (
+              render={({ field: { onChange, value } }) => (
                 <TouchableOpacity className="relative" onPress={handlePresentModalPress}>
                   <Input
                     value={value}
                     onChangeText={onChange}
                     placeholder="Search drug"
                     editable={false}
-                    className={cn(!isValid && "border-red-600")}
+                    className={cn(errors.product?.name && "border-red-600")}
                   />
                   <Button className="absolute inset-y-0 right-2 h-full" variant="ghost" size="icon">
                     <Feather size={18} name="chevron-down" />
@@ -162,6 +165,7 @@ export default function ReportForm() {
             index={0}
             handleStyle={{ display: "none" }}
             snapPoints={snapPoints}
+            onDismiss={onDismiss}
             onChange={handleSheetPositionChange}>
             <BottomSheetView className="p-4" style={{ flex: 1 }}>
               <StyledSafeAreaView>
@@ -181,6 +185,9 @@ export default function ReportForm() {
                 {isFetching && <ActivityIndicator color="#94A3B8" />}
                 <BottomSheetFlatList
                   data={data?.documents}
+                  contentContainerStyle={{
+                    flex: 1,
+                  }}
                   renderItem={({ item }) => (
                     <Button
                       variant="ghost"

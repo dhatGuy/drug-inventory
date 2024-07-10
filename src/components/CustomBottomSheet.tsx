@@ -22,7 +22,7 @@ export const CustomBottomSheet = forwardRef<BottomSheetModal, BottomSheetModalPr
         enablePanDownToClose
         ref={ref}
         backdropComponent={renderBackdrop}
-        style={[{ borderRadius: 20, overflow: "hidden" }, style]}
+        // style={[{ borderRadius: 20, overflow: "hidden" }, style]}
         handleIndicatorStyle={{
           backgroundColor: "#25262B",
           width: "30%",

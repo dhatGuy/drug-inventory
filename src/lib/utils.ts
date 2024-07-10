@@ -46,7 +46,6 @@ export function formatDistance(
     if (options.comparison && options.comparison > 0) {
       return "in " + result;
     } else {
-      console.log(result);
       return result + " ago";
     }
   }

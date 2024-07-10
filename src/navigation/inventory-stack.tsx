@@ -11,7 +11,7 @@ import UpdateItem from "~/screens/tab/inventory/UpdateItem";
 const Stack = createStackNavigator<InventoryStackParamList>();
 export default function InventoryStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Inventory">
       <Stack.Screen name="Inventory" component={Inventory} />
       <Stack.Screen name="ItemDetails" component={ItemDetails} />
       <Stack.Screen name="UpdateItem" component={UpdateItem} />

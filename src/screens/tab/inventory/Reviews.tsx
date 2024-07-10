@@ -17,7 +17,7 @@ import { Separator } from "~/components/ui/separator";
 import { H3, H4 } from "~/components/ui/typography";
 import { useCreateReview, useDeleteReview, useGetReviewsByProductId } from "~/hooks/review.hook";
 import { useBottomSheetBackHandler } from "~/hooks/useBSBackHandler";
-import { getAvatarName } from "~/lib/utils";
+import { formattedDate, getAvatarName } from "~/lib/utils";
 import { CreateReviewSchema } from "~/lib/validation";
 import { useUser } from "~/store/authStore";
 
@@ -161,11 +161,16 @@ const Reviews = ({ navigation, route }) => {
                       </Button>
                     )}
                   </View>
-                  <Text className="text-sm text-gray-500">
-                    by {item.user.name} {user?.$id === item.user.$id && "(You)"}
-                  </Text>
-                  <Text className="text-lg">{item.desc}</Text>
-                  <Text className="text-gray-500">{new Date(item.$createdAt).toDateString()}</Text>
+                  <Text className="text-gray-600">{item.desc}</Text>
+                  <View className="flex-row items-center gap-2">
+                    <Text className="font-bold">
+                      by {item.user.name} {user?.$id === item.user.$id && "(You)"}
+                    </Text>
+                    <View className="size-1 bg-gray-500 rounded-full" />
+                    <Text className="text-gray-500 font-bold">
+                      {formattedDate(new Date(item.$createdAt), true)}
+                    </Text>
+                  </View>
                 </View>
               </View>
             )}
