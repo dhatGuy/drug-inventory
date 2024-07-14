@@ -19,19 +19,36 @@ export const reviewsQueryOptions = queryOptions({
   },
 });
 
-const getProducts = async (searchFilter?: string) => {
+const getProducts = async ({
+  searchFilter,
+  searchBy,
+}: {
+  searchFilter?: string;
+  searchBy?: "Product Name" | "Mas Number";
+}) => {
+  if (searchBy === "Mas Number" && searchFilter) {
+    const response = await databases.listDocuments("drug-inventory", "mas-number", [
+      Query.equal("value", searchFilter),
+    ]);
+    const result = documentListSchema(MasNumberSchema).parse(response);
+    return {
+      ...result,
+      documents: result.documents.map((doc) => doc.product),
+    };
+  }
+
   const response = await databases.listDocuments("drug-inventory", "products", [
     Query.orderDesc("$createdAt"),
     ...(searchFilter ? [Query.search("name", searchFilter)] : []),
   ]);
-  const result = documentListSchema(ProductSchema).parse(response);
-  return result;
+  // const result = documentListSchema(ProductSchema).parse(response);
+  return response;
 };
 
-export const productsQueryOptions = (searchTerm: string) =>
+export const productsQueryOptions = (searchTerm: string, searchBy: "Product Name" | "Mas Number") =>
   queryOptions({
-    queryKey: ["products", searchTerm],
-    queryFn: () => getProducts(searchTerm),
+    queryKey: ["products", searchTerm, searchBy],
+    queryFn: () => getProducts({ searchFilter: searchTerm, searchBy }),
   });
 
 const getDrugReport = async () => {
@@ -83,4 +100,18 @@ export const masNumberQueryByProductIdOptions = (productId: string) =>
   queryOptions({
     queryKey: ["masNumber", productId],
     queryFn: () => masNumberByProductId(productId),
+  });
+
+export const searchProductByMasNumber = async (masNumber: string) => {
+  const response = await databases.listDocuments("drug-inventory", "products", [
+    Query.search("masNumber", masNumber),
+  ]);
+  const result = documentListSchema(ProductSchema).parse(response);
+  return result;
+};
+
+export const searchProductByMasNumberQuery = (masNumber: string) =>
+  queryOptions({
+    queryKey: ["searchProductByMasNumber", masNumber],
+    queryFn: () => searchProductByMasNumber(masNumber),
   });

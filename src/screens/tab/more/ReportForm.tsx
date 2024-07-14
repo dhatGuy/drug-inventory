@@ -6,7 +6,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { StyleSheet } from "nativewind";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -39,8 +39,12 @@ function BottomSheetView(props: BottomSheetViewProps) {
 export default function ReportForm() {
   const navigation = useNavigation();
   const mutation = useCreateDrugReport();
+  const { params } = useRoute();
   const formMethods = useForm({
     resolver: zodResolver(NewReportSchema),
+    defaultValues: {
+      masNumber: params?.masNumber ?? "",
+    },
   });
 
   const {
@@ -70,7 +74,7 @@ export default function ReportForm() {
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, isFetching } = useQuery({
-    ...productsQueryOptions(debouncedSearchText),
+    ...productsQueryOptions(debouncedSearchText, "Product Name"),
     queryKey: ["products", "search", debouncedSearchText],
     enabled: debouncedSearchText.length > 0,
     persister: undefined,
