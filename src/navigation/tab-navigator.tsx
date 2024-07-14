@@ -79,7 +79,7 @@ export default function TabLayout({ navigation }: Props) {
         component={ItemNotifications}
         options={{
           tabBarBadge: totalUnread,
-          tabBarBadgeStyle: { backgroundColor: "blue" },
+          tabBarBadgeStyle: { backgroundColor: "#B4C4A9" },
           title: "Notification",
           tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
         }}

@@ -8,7 +8,9 @@ const reviewBaseSchema = z.object({
   title: z.string(),
   desc: z.string(),
   user: userSchema,
+  userId: z.string(),
   product: ProductSchema,
+  productId: z.string(),
 });
 
 export type ReviewBaseSchema = z.infer<typeof reviewBaseSchema>;

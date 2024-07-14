@@ -1,7 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useMemo } from "react";
 import { ActivityIndicator, TextInput, View } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { StyledSafeAreaView } from "~/components";
@@ -9,15 +9,29 @@ import { Button, Input, Text } from "~/components/ui";
 import { Avatar } from "~/components/ui/avatar";
 import { Separator } from "~/components/ui/separator";
 import { H4 } from "~/components/ui/typography";
-import { reviewsQueryOptions } from "~/lib/queryOptions";
+import { reviewsByUserQueryOptions, reviewsQueryOptions } from "~/lib/queryOptions";
 import { formattedDate, getAvatarName } from "~/lib/utils";
+import { useUser } from "~/store/authStore";
 
 const Reviews = () => {
-  const { data, isPending } = useQuery(reviewsQueryOptions);
+  const user = useUser();
+  const isUser = !user?.labels.length;
+  const { data, isPending } = useQuery({
+    ...reviewsQueryOptions,
+    enabled: !isUser,
+  });
+  const userReviews = useQuery({
+    ...reviewsByUserQueryOptions(user?.$id!),
+    enabled: isUser,
+  });
   const searchRef = React.useRef<TextInput>(null);
   const [search, setSearch] = React.useState("");
   const [focused, setFocused] = React.useState(false);
   const navigation = useNavigation();
+
+  const reviews = useMemo(() => {
+    return isUser ? userReviews.data : data;
+  }, [data, isUser, userReviews.data]);
 
   const renderItem = ({ item }) => {
     return (
@@ -101,7 +115,7 @@ const Reviews = () => {
       </View>
       <Separator />
       <FlatList
-        data={data?.documents ?? []}
+        data={reviews?.documents ?? []}
         // ListHeaderComponent={ListHeader}
         renderItem={renderItem}
         ItemSeparatorComponent={() => <Separator className="my-2" />}

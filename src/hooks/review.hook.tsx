@@ -30,6 +30,8 @@ export function useCreateReview() {
     }
     const response = databases.createDocument("drug-inventory", "review", ID.unique(), {
       ...data,
+      userId,
+      productId,
       user: userId,
       product: productId,
     });

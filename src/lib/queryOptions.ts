@@ -19,6 +19,19 @@ export const reviewsQueryOptions = queryOptions({
   },
 });
 
+export const reviewsByUserQueryOptions = (userId: string) =>
+  queryOptions({
+    queryKey: ["reviews", "user", userId],
+    queryFn: async () => {
+      const data = await databases.listDocuments("drug-inventory", "review", [
+        Query.orderDesc("$createdAt"),
+        Query.equal("userId", userId),
+      ]);
+
+      return documentListSchema(ReviewSchema).parse(data);
+    },
+  });
+
 const getProducts = async ({
   searchFilter,
   searchBy,
