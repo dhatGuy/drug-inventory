@@ -6,7 +6,10 @@ import { RootStackParamList, TabNavigatorParamList } from ".";
 import InventoryStack from "./inventory-stack";
 import MoreStack from "./more-stack";
 
+import { useMemo } from "react";
 import { StyleSheet } from "react-native";
+import { useMMKVString } from "react-native-mmkv";
+import { useGetNotifications } from "~/hooks/notification.hook";
 import UserInventory from "~/screens/tab/UserInventory";
 import ItemNotifications from "~/screens/tab/inventory/ItemNotifications";
 import { useUser } from "~/store/authStore";
@@ -23,6 +26,18 @@ type Props = StackScreenProps<RootStackParamList, "TabNavigator">;
 export default function TabLayout({ navigation }: Props) {
   const user = useUser();
   const currentRouteName = useRouteName();
+  const isAdmin = user?.labels.includes("admin") ?? false;
+
+  const { data: notifications } = useGetNotifications(isAdmin);
+  const [lastNotificationDate] = useMMKVString("lastNotificationDate");
+
+  const totalUnread = useMemo(
+    () =>
+      notifications?.documents.filter((n) => {
+        return !lastNotificationDate || new Date(n.$createdAt) > new Date(lastNotificationDate);
+      }).length ?? 0,
+    [lastNotificationDate, notifications]
+  );
 
   const hide = !["Home", "Inventory", "Notification", "More", "UserInventory"].includes(
     currentRouteName ?? ""
@@ -63,6 +78,8 @@ export default function TabLayout({ navigation }: Props) {
         name="Notification"
         component={ItemNotifications}
         options={{
+          tabBarBadge: totalUnread,
+          tabBarBadgeStyle: { backgroundColor: "blue" },
           title: "Notification",
           tabBarIcon: ({ color }) => <TabBarIcon name="bell" color={color} />,
         }}

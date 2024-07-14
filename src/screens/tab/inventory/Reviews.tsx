@@ -185,52 +185,52 @@ const Reviews = ({ navigation, route }) => {
                   {userReview ? "Update Your Review" : "Add Your Review"}
                 </Text>
               </Button>
-              <CustomBottomSheet
-                ref={sheetRef}
-                onChange={handleSheetPositionChange}
-                detached
-                bottomInset={50}
-                enableDynamicSizing
-                backgroundStyle={{ backgroundColor: "#fff" }}
-                style={{ paddingHorizontal: 20, paddingTop: 10, marginHorizontal: 20 }}
-                handleIndicatorStyle={{ display: "none" }}>
-                <BottomSheetView className="pb-8 px-4">
-                  <View className="flex-row items-center justify-between">
-                    <H3 className="text-lg">{userReview ? "Update" : "Submit"} Review</H3>
-                    <Button variant="ghost" size="icon" onPress={() => sheetRef.current?.close()}>
-                      <Feather name="x" size={24} />
-                    </Button>
-                  </View>
-                  <Separator className="my-4" />
-                  <FormProvider {...formMethods}>
-                    <View className="gap-4">
-                      <View>
-                        <Label className="mb-2" nativeID="title">
-                          Title
-                        </Label>
-                        <RHFInput name="title" placeholder="Enter title" />
-                      </View>
-                      <View>
-                        <Label className="mb-2" nativeID="title">
-                          Description
-                        </Label>
-                        <RHFInput name="desc" multiline placeholder="Enter description" />
-                      </View>
-                      <Button
-                        onPress={handleSubmit(onSubmit)}
-                        className="flex-row gap-2"
-                        disabled={mutation.isPending}>
-                        {mutation.isPending ? <ActivityIndicator /> : null}
-                        <Text>{userReview ? "Update" : "Submit"}</Text>
-                      </Button>
-                    </View>
-                  </FormProvider>
-                </BottomSheetView>
-              </CustomBottomSheet>
             </>
           )}
         </>
       )}
+      <CustomBottomSheet
+        ref={sheetRef}
+        onChange={handleSheetPositionChange}
+        detached
+        bottomInset={50}
+        enableDynamicSizing
+        backgroundStyle={{ backgroundColor: "#fff" }}
+        style={{ paddingHorizontal: 20, paddingTop: 10, marginHorizontal: 20 }}
+        handleIndicatorStyle={{ display: "none" }}>
+        <BottomSheetView className="pb-8 px-4">
+          <View className="flex-row items-center justify-between">
+            <H3 className="text-lg">{userReview ? "Update" : "Submit"} Review</H3>
+            <Button variant="ghost" size="icon" onPress={() => sheetRef.current?.close()}>
+              <Feather name="x" size={24} />
+            </Button>
+          </View>
+          <Separator className="my-4" />
+          <FormProvider {...formMethods}>
+            <View className="gap-4">
+              <View>
+                <Label className="mb-2" nativeID="title">
+                  Title
+                </Label>
+                <RHFInput name="title" placeholder="Enter title" />
+              </View>
+              <View>
+                <Label className="mb-2" nativeID="title">
+                  Description
+                </Label>
+                <RHFInput name="desc" multiline placeholder="Enter description" />
+              </View>
+              <Button
+                onPress={handleSubmit(onSubmit)}
+                className="flex-row gap-2"
+                disabled={mutation.isPending}>
+                {mutation.isPending ? <ActivityIndicator /> : null}
+                <Text>{userReview ? "Update" : "Submit"}</Text>
+              </Button>
+            </View>
+          </FormProvider>
+        </BottomSheetView>
+      </CustomBottomSheet>
     </StyledSafeAreaView>
   );
 };

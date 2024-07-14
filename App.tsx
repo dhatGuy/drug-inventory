@@ -15,6 +15,7 @@ import Toast, {
 } from "react-native-toast-message";
 
 import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { AppStateStatus, Platform } from "react-native";
 import ErrorBoundary from "~/components/error-boundary";
 import { PortalHost } from "~/components/primitives/portal";
@@ -91,7 +92,7 @@ const toastConfig: ToastConfig = {
 export default function App() {
   useOnlineManager();
   useMMKVDevTools();
-  // useReactQueryDevTools(queryClient);
+  useReactQueryDevTools(queryClient);
   useAppState(onAppStateChange);
 
   const { loaded, error } = useLoadResources();

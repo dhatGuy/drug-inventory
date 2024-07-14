@@ -52,6 +52,7 @@ export function useGetNotifications(isAdmin: boolean) {
     ]);
 
     const result = documentListSchema(NotificationSchema).safeParse(response);
+
     return result.success ? result.data : ([] as unknown as typeof result.data);
   };
 
