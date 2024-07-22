@@ -127,14 +127,18 @@ const Reviews = ({ navigation, route }) => {
 
           <H4>No Reviews</H4>
 
-          <Text>Be the first to review this item</Text>
+          {!user?.labels.length ? (
+            <>
+              <Text>Be the first to review this drug</Text>
 
-          <Button
-            className="flex-row items-center gap-3 p-2"
-            onPress={() => sheetRef.current?.present()}>
-            <Text>Add Review</Text>
-            <Feather name="plus" size={24} color="#fff" />
-          </Button>
+              <Button
+                className="flex-row items-center gap-3 p-2"
+                onPress={() => sheetRef.current?.present()}>
+                <Text>Add Review</Text>
+                <Feather name="plus" size={24} color="#fff" />
+              </Button>
+            </>
+          ) : null}
         </View>
       ) : (
         <>

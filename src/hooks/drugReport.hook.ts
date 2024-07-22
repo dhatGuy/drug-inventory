@@ -13,10 +13,10 @@ export function useCreateDrugReport() {
         "drug-report",
         ID.unique(),
         {
-          productID: data.product.id,
+          product: data.product.id,
           masNumber: data.masNumber,
           comment: data.comment,
-          userId: user?.$id,
+          user: user?.$id,
         }
       );
 

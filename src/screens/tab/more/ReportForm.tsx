@@ -89,7 +89,7 @@ export default function ReportForm() {
           text1: "Drug report submitted successfully",
         });
       },
-      onError: () => {
+      onError: (error) => {
         Toast.show({
           text1: "Error occurred while creating drug report",
         });
@@ -149,7 +149,7 @@ export default function ReportForm() {
           <View className="mb-4">
             <Label nativeID="masNo">Drug MAS Number</Label>
 
-            <RHFInput name="masNumber" />
+            <RHFInput name="masNumber" keyboardType="number-pad" />
           </View>
 
           <View className="mb-4">
